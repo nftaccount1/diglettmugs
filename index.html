@@ -635,6 +635,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
     <li><a href="#faq">FAQ</a></li>
   </ul>
   <button class="nav-wallet-btn" id="nav-wallet-btn" onclick="connectWallet()">⬡ Connect</button>
+  <a href="https://x.com/DiglettMugs" target="_blank" rel="noopener" style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--muted);text-decoration:none;letter-spacing:0.05em;margin-left:1rem;transition:color 0.15s" onmouseover="this.style.color='var(--accent2)'" onmouseout="this.style.color='var(--muted)'">𝕏</a>
 </nav>
 
 <!-- HERO -->
@@ -794,7 +795,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
       <div class="mint-stat"><span class="mint-stat-val" id="minted-count">0</span><span class="mint-stat-label">Minted</span></div>
       <div class="mint-stat"><span class="mint-stat-val">10</span><span class="mint-stat-label">Max/Txn</span></div>
     </div>
-    <p class="wallet-note">Connect MetaMask, Coinbase Wallet, or any EIP-1193 provider.<br/>Each Mug is unique — randomly generated at mint time on-chain.</p>
+    <p class="wallet-note">Connect MetaMask, Coinbase Wallet, or any EIP-1193 provider.<br/>Mint price is 0.0003 ETH per Mug. Send exact amount — overpay is not refunded by the contract.</p>
   </div>
 </section>
 </div>
@@ -888,7 +889,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
   <h2 class="section-title reveal reveal-delay-1">FAQ</h2>
   <div class="faq-list">
     <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">What blockchain are Diglett Mugs on?</div><div class="faq-a">Diglett Mugs are minted on Ethereum. All metadata and images are stored permanently on IPFS — decentralized and not dependent on any server we run.</div></div>
-    <div class="faq-item reveal reveal-delay-1"><div class="faq-q" onclick="toggleFaq(this)">How many can I mint per wallet?</div><div class="faq-a">Up to 10 Diglett Mugs per wallet. This keeps the collection fair and prevents any single holder from grabbing too many at once.</div></div>
+    <div class="faq-item reveal reveal-delay-1"><div class="faq-q" onclick="toggleFaq(this)">How many can I mint per transaction?</div><div class="faq-a">Up to 10 Diglett Mugs per transaction. There is no per-wallet cap — you can mint multiple transactions. This keeps individual mints fair while letting committed collectors grab more.</div></div>
     <div class="faq-item reveal reveal-delay-2"><div class="faq-q" onclick="toggleFaq(this)">What size are the images?</div><div class="faq-a">Each Diglett Mug is a 512×512px pixel art PNG — OpenSea's recommended resolution. Sharp, crisp, and perfect for display. Every pixel is intentional.</div></div>
     <div class="faq-item reveal reveal-delay-1"><div class="faq-q" onclick="toggleFaq(this)">Are the traits revealed at mint?</div><div class="faq-a">Yes. Diglett Mugs are fully revealed at the moment of mint — no blind boxes, no waiting. You see exactly what you're getting before you confirm the transaction.</div></div>
     <div class="faq-item reveal reveal-delay-2"><div class="faq-q" onclick="toggleFaq(this)">Do I own the commercial rights?</div><div class="faq-a">Holders receive full commercial rights to their individual Diglett Mug. Use it as a PFP, put it on a t-shirt, build a brand around it — your Mug, your rules.</div></div>
@@ -902,7 +903,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 <footer>
   <div class="footer-logo">Diglett <span>Mugs</span></div>
   <div class="footer-links">
-    <a href="#">OpenSea</a><a href="#">Twitter</a>
+    <a href="#">OpenSea</a><a href="https://x.com/DiglettMugs" target="_blank" rel="noopener">𝕏 Twitter</a>
   </div>
   <div class="footer-copy">© 2026 Diglett Mugs. 5,000 faces. Zero going back underground.</div>
 </footer>
@@ -1227,30 +1228,45 @@ async function handleMintBtn(){
 
 async function executeMint(){
   if(typeof window.ethereum==='undefined'){ showToast('No wallet found.','error'); return; }
+
+  // ── Network check: must be Ethereum mainnet (chainId 0x1) ──
+  const chainId=await window.ethereum.request({method:'eth_chainId'});
+  if(chainId!=='0x1'){
+    showToast('Wrong network.\nPlease switch to Ethereum Mainnet.','error');
+    try{ await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x1'}]}); }catch(_){}
+    return;
+  }
+
   const btn=document.getElementById('main-mint-btn');
   btn.disabled=true;btn.textContent='⏳ Minting...';
   const txEl=document.getElementById('tx-status');
   txEl.className='tx-status pending';txEl.style.display='block';
   txEl.textContent='⏳ Transaction pending...\nWaiting for confirmation.';
   try{
-    const CONTRACT='0x0000000000000000000000000000000000000000'; // replace with your contract
-    const priceWei=ethers.utils.parseEther((mintCount*0.0003).toFixed(4));
-    const priceHex=priceWei.toHexString();
-    const mintData='0x1249c58b'; // mint() selector — replace with your ABI-encoded call
+    const CONTRACT='0xbfe940532b0e29652790c30c4fbd8d852fcfa2fe';
+
+    // Encode mint(uint256) properly via ethers Interface — avoids manual hex selector bugs
+    const iface=new ethers.utils.Interface(['function mint(uint256 quantity) payable']);
+    const mintData=iface.encodeFunctionData('mint',[mintCount]);
+
+    // Calculate price precisely using BigNumber — avoids floating point errors
+    const pricePerToken=ethers.utils.parseEther(livePrice.toFixed(6));
+    const totalWei=pricePerToken.mul(mintCount);
+
     const tx=await window.ethereum.request({
       method:'eth_sendTransaction',
-      params:[{from:walletAddress,to:CONTRACT,value:priceHex,data:mintData}]
+      params:[{from:walletAddress,to:CONTRACT,value:totalWei.toHexString(),data:mintData}]
     });
     txEl.className='tx-status success';
-    txEl.innerHTML=`✓ Transaction sent!<br/>Hash: <span style="word-break:break-all;font-size:9px">${tx}</span>`;
-    showToast('Mint TX submitted!','success');
-    minted+=mintCount;
-    updateMintedUI(minted);
-    // refresh live count after mint
-    setTimeout(fetchLiveMintCount,3000);
+    txEl.innerHTML=`✓ Transaction sent!<br/><a href="https://etherscan.io/tx/${tx}" target="_blank" style="color:var(--success);font-size:9px;word-break:break-all">${tx} ↗</a>`;
+    showToast('Mint TX submitted!\nCheck Etherscan for confirmation.','success');
+    // Refresh live count after a short delay
+    setTimeout(fetchLiveMintCount,4000);
+    setTimeout(fetchLiveMintCount,10000);
   }catch(e){
+    const msg=e?.data?.message||e?.message||'Transaction failed or rejected.';
     txEl.className='tx-status fail';
-    txEl.textContent='✕ '+(e.message||'Transaction failed or rejected.');
+    txEl.textContent='✕ '+msg;
     showToast('Transaction failed.','error');
   }finally{
     btn.disabled=false;btn.textContent='⛏ Mint Now';
@@ -1269,12 +1285,13 @@ if(typeof window.ethereum!=='undefined'){
 // ═══════════════════════════════════════════════
 // MINT COUNTER & PROGRESS
 // ═══════════════════════════════════════════════
+let livePrice=0.0003; // updated by fetchLiveMintCount
+
 function changeCount(d){
   mintCount=Math.max(1,Math.min(10,mintCount+d));
   document.getElementById('mint-count').textContent=mintCount;
   const totalEl=document.getElementById('mint-total');
-  totalEl.textContent=(mintCount*0.0003).toFixed(4)+' ETH';
-  // pulse animation on change
+  totalEl.textContent=(mintCount*livePrice).toFixed(4)+' ETH';
   totalEl.style.transition='none';
   totalEl.style.transform='scale(1.25)';
   totalEl.style.color='#fff';
@@ -1291,19 +1308,41 @@ function updateMintedUI(n){
 // ═══════════════════════════════════════════════
 // LIVE MINT COUNT (ethers.js)
 // ═══════════════════════════════════════════════
-const CONTRACT_ADDRESS='0x0000000000000000000000000000000000000000'; // replace with deployed contract
-const TOTAL_SUPPLY_ABI=['function totalSupply() view returns (uint256)'];
-const RPC_URL='https://eth.llamarpc.com'; // public Ethereum RPC
+const CONTRACT_ADDRESS='0xbfe940532b0e29652790c30c4fbd8d852fcfa2fe';
+const MINT_ABI=[
+  'function totalMinted() view returns (uint256)',
+  'function remaining() view returns (uint256)',
+  'function mintPrice() view returns (uint96)',
+  'function mintOpen() view returns (bool)',
+  'function MAX_SUPPLY() view returns (uint256)'
+];
+const RPC_URL='https://eth.llamarpc.com';
 
 async function fetchLiveMintCount(){
   try{
     const provider=new ethers.providers.JsonRpcProvider(RPC_URL);
-    const contract=new ethers.Contract(CONTRACT_ADDRESS,TOTAL_SUPPLY_ABI,provider);
-    const total=await contract.totalSupply();
+    const contract=new ethers.Contract(CONTRACT_ADDRESS,MINT_ABI,provider);
+    const [total,open,price]=await Promise.all([
+      contract.totalMinted(),
+      contract.mintOpen(),
+      contract.mintPrice()
+    ]);
     minted=total.toNumber();
     updateMintedUI(minted);
+    // Reflect on-chain mint state
+    if(!open){
+      const btn=document.getElementById('main-mint-btn');
+      if(btn&&!walletAddress){
+        btn.textContent='⛏ Mint Closed';btn.disabled=true;
+      }
+    }
+    // Sync price display in case owner changed it
+    const priceEth=ethers.utils.formatEther(price);
+    livePrice=parseFloat(priceEth);
+    document.querySelectorAll('.mint-price').forEach(el=>el.textContent=priceEth+' ETH');
+    document.getElementById('mint-total').textContent=(mintCount*livePrice).toFixed(4)+' ETH';
   }catch(e){
-    // contract not deployed yet — keep current count
+    // RPC error — keep current display
   }
 }
 
