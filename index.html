@@ -1244,25 +1244,28 @@ async function executeMint(){
   txEl.textContent='⏳ Transaction pending...\nWaiting for confirmation.';
   try{
     const CONTRACT='0xbfe940532b0e29652790c30c4fbd8d852fcfa2fe';
+    const MINT_ABI_WRITE=['function mint(uint256 quantity) payable'];
 
-    // Encode mint(uint256) properly via ethers Interface — avoids manual hex selector bugs
-    const iface=new ethers.utils.Interface(['function mint(uint256 quantity) payable']);
-    const mintData=iface.encodeFunctionData('mint',[mintCount]);
+    // Use ethers Web3Provider — auto-estimates gas correctly, no manual encoding needed
+    const provider=new ethers.providers.Web3Provider(window.ethereum);
+    const signer=provider.getSigner();
+    const contract=new ethers.Contract(CONTRACT,MINT_ABI_WRITE,signer);
 
-    // Calculate price precisely using BigNumber — avoids floating point errors
-    const pricePerToken=ethers.utils.parseEther(livePrice.toFixed(6));
+    // Use hardcoded wei to avoid any float precision issues
+    // 0.0003 ETH = 300000000000000 wei
+    const pricePerToken=ethers.BigNumber.from('300000000000000');
     const totalWei=pricePerToken.mul(mintCount);
 
-    const tx=await window.ethereum.request({
-      method:'eth_sendTransaction',
-      params:[{from:walletAddress,to:CONTRACT,value:totalWei.toHexString(),data:mintData}]
-    });
-    txEl.className='tx-status success';
-    txEl.innerHTML=`✓ Transaction sent!<br/><a href="https://etherscan.io/tx/${tx}" target="_blank" style="color:var(--success);font-size:9px;word-break:break-all">${tx} ↗</a>`;
+    const tx=await contract.mint(mintCount,{value:totalWei});
+    txEl.className='tx-status pending';
+    txEl.innerHTML=`⏳ Submitted! Waiting for confirmation...<br/><a href="https://etherscan.io/tx/${tx.hash}" target="_blank" style="color:var(--accent2);font-size:9px;word-break:break-all">${tx.hash} ↗</a>`;
     showToast('Mint TX submitted!\nCheck Etherscan for confirmation.','success');
-    // Refresh live count after a short delay
-    setTimeout(fetchLiveMintCount,4000);
-    setTimeout(fetchLiveMintCount,10000);
+    await tx.wait(1); // wait for 1 confirmation
+    txEl.className='tx-status success';
+    txEl.innerHTML=`✓ Minted! <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" style="color:var(--success);font-size:9px;word-break:break-all">View on Etherscan ↗</a>`;
+    showToast('Mint confirmed!','success');
+    setTimeout(fetchLiveMintCount,2000);
+    setTimeout(fetchLiveMintCount,8000);
   }catch(e){
     const msg=e?.data?.message||e?.message||'Transaction failed or rejected.';
     txEl.className='tx-status fail';
