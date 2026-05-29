@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Diglett Mugs — 5,000 Pixel Faces From Below</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%233B2409'/%3E%3C!-- skin --%3E%3Crect x='4' y='2' width='8' height='8' fill='%23c8824d'/%3E%3Crect x='3' y='3' width='1' height='6' fill='%23c8824d'/%3E%3Crect x='12' y='3' width='1' height='6' fill='%23c8824d'/%3E%3C!-- eyes --%3E%3Crect x='5' y='4' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='9' y='4' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='5' y='4' width='1' height='1' fill='white'/%3E%3Crect x='9' y='4' width='1' height='1' fill='white'/%3E%3C!-- nose --%3E%3Crect x='7' y='6' width='2' height='1' fill='%23a0522d'/%3E%3C!-- mouth --%3E%3Crect x='5' y='8' width='6' height='1' fill='%231a1a1a'/%3E%3Crect x='6' y='9' width='4' height='1' fill='%231a1a1a'/%3E%3C!-- neck --%3E%3Crect x='5' y='10' width='6' height='4' fill='%23c8824d'/%3E%3C!-- dirt --%3E%3Crect x='0' y='13' width='16' height='3' fill='%235C3D1E'/%3E%3C/svg%3E"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%233B2409'/%3E%3Crect x='4' y='2' width='8' height='8' fill='%23c8824d'/%3E%3Crect x='3' y='3' width='1' height='6' fill='%23c8824d'/%3E%3Crect x='12' y='3' width='1' height='6' fill='%23c8824d'/%3E%3Crect x='5' y='4' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='9' y='4' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='5' y='4' width='1' height='1' fill='white'/%3E%3Crect x='9' y='4' width='1' height='1' fill='white'/%3E%3Crect x='7' y='6' width='2' height='1' fill='%23a0522d'/%3E%3Crect x='5' y='8' width='6' height='1' fill='%231a1a1a'/%3E%3Crect x='6' y='9' width='4' height='1' fill='%231a1a1a'/%3E%3Crect x='5' y='10' width='6' height='4' fill='%23c8824d'/%3E%3Crect x='0' y='13' width='16' height='3' fill='%235C3D1E'/%3E%3C/svg%3E"/>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js" type="application/javascript"></script>
 <style>
@@ -53,7 +53,6 @@ body::after {
   pointer-events: none; z-index: 9998;
 }
 
-/* ── SCROLL ANIMATIONS ── */
 .reveal {
   opacity: 0;
   transform: translateY(32px);
@@ -68,7 +67,6 @@ body::after {
 .reveal-delay-3 { transition-delay: 0.3s; }
 .reveal-delay-4 { transition-delay: 0.4s; }
 
-/* ── HERO ── */
 .hero {
   min-height: 100vh;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -86,7 +84,6 @@ body::after {
 @keyframes twinkle { 0%,100%{opacity:1} 50%{opacity:0.1} }
 .moon { position: absolute; top: 8%; right: 12%; width: 64px; height: 64px; image-rendering: pixelated; }
 
-/* ── AURORA ── */
 .aurora {
   position: absolute; top: 0; left: 0; right: 0; height: 55%;
   overflow: hidden; pointer-events: none;
@@ -124,7 +121,6 @@ body::after {
     radial-gradient(circle 2px at 90% 70%, rgba(255,255,255,0.04) 0%, transparent 100%);
 }
 
-/* ── FIREFLIES ── */
 .firefly {
   position: absolute;
   width: 4px; height: 4px;
@@ -159,7 +155,6 @@ body::after {
 .diglett-face { image-rendering: pixelated; width: var(--fsize, 48px); height: var(--fsize, 48px); }
 .diglett-neck { width: var(--nw, 20px); height: var(--nh, 28px); background: var(--skin, #c8824d); border-radius: 0 0 3px 3px; }
 
-/* ── HERO CONTENT ── */
 .hero-content {
   position: absolute;
   top: 7%;
@@ -212,7 +207,6 @@ body::after {
 .scroll-arrow { width: 16px; height: 16px; border-right: 3px solid var(--muted); border-bottom: 3px solid var(--muted); transform: rotate(45deg); animation: bounce 1.4s infinite; }
 @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(6px)} }
 
-/* ── LAYOUT ── */
 section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .section-label {
   font-family: 'Press Start 2P', monospace; font-size: 9px;
@@ -222,7 +216,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .section-label::before { content: '▶'; color: var(--accent2); }
 .section-title { font-family: 'Press Start 2P', monospace; font-size: clamp(16px, 3vw, 28px); line-height: 1.6; margin-bottom: 2rem; color: var(--cream); }
 
-/* ── LORE ── */
 .lore-section { background: linear-gradient(180deg, var(--surface2) 0%, var(--surface) 50%, var(--surface2) 100%); position: relative; overflow: hidden; }
 .lore-section::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 31px, rgba(255,255,255,0.015) 31px, rgba(255,255,255,0.015) 32px); }
 .lore-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
@@ -231,7 +224,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .lore-text blockquote { border-left: 3px solid var(--accent); padding-left: 1.2rem; margin: 2rem 0; font-family: 'Press Start 2P', monospace; font-size: 11px; line-height: 2; color: var(--accent); font-style: italic; }
 .lore-art { display: flex; flex-direction: column; gap: 20px; align-items: center; }
 
-/* ── TRAITS ── */
 .traits-section { border-top: 1px solid rgba(255,255,255,0.06); }
 .traits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); margin-top: 3rem; }
 .trait-card { background: var(--surface); padding: 1.5rem; transition: background 0.15s, transform 0.2s; cursor: default; }
@@ -241,7 +233,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .trait-desc { font-family: 'VT323', monospace; font-size: 18px; color: var(--muted); line-height: 1.4; }
 .trait-count { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); margin-top: 0.75rem; }
 
-/* ── GALLERY ── */
 .gallery-section { border-top: 1px solid rgba(255,255,255,0.06); }
 .gallery-controls {
   display: flex; gap: 12px; margin-bottom: 2rem; flex-wrap: wrap; align-items: center;
@@ -290,17 +281,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 }
 .gallery-item:hover .rarity-badge { opacity: 1; }
 
-.gallery-load-more {
-  text-align: center; margin-top: 2rem;
-}
-.load-more-btn {
-  font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 14px 32px;
-  background: transparent; border: 2px solid var(--accent); color: var(--accent);
-  cursor: pointer; letter-spacing: 0.1em; transition: all 0.15s;
-}
-.load-more-btn:hover { background: var(--accent); color: white; }
-
-/* ── LIGHTBOX ── */
 .lightbox {
   position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10000;
   display: flex; align-items: center; justify-content: center;
@@ -331,7 +311,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 }
 .lightbox-close:hover { border-color: var(--accent); color: var(--accent); }
 
-/* ── MINT ── */
 .mint-section { text-align: center; position: relative; }
 .mint-section::before {
   content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -353,7 +332,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .counter-btn:active { transform: scale(0.94); }
 .counter-val { font-family: 'Press Start 2P', monospace; font-size: 28px; color: var(--cream); min-width: 56px; text-align: center; }
 
-/* ── WEB3 STATES ── */
 .wallet-btn {
   font-family: 'Press Start 2P', monospace; font-size: 11px; padding: 16px 32px;
   border: none; cursor: pointer; letter-spacing: 0.06em; position: relative;
@@ -386,7 +364,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .tx-status.success { display: block; background: rgba(76,175,80,0.08); border: 1px solid rgba(76,175,80,0.3); color: var(--success); }
 .tx-status.fail { display: block; background: rgba(244,67,54,0.08); border: 1px solid rgba(244,67,54,0.3); color: var(--error); }
 
-/* progress bar */
 .mint-progress { margin: 2rem 0 0.5rem; background: var(--surface2); height: 8px; position: relative; border: 1px solid rgba(255,255,255,0.1); }
 .mint-progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 1s ease; position: relative; }
 .mint-progress-bar::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; background: white; animation: scanline 1s ease-in-out infinite; }
@@ -399,7 +376,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .mint-stat-label { font-family: 'VT323', monospace; font-size: 16px; color: var(--muted); }
 .wallet-note { font-family: 'VT323', monospace; font-size: 17px; color: var(--muted); margin-top: 1.5rem; line-height: 1.6; }
 
-/* ── TEAM ── */
 .team-section { border-top: 1px solid rgba(255,255,255,0.06); }
 .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 2px; margin-top: 3rem; }
 .team-card {
@@ -426,54 +402,18 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 }
 .team-link:hover { border-color: var(--accent2); color: var(--accent2); }
 
-/* ── ROADMAP ── */
 .roadmap-section { border-top: 1px solid rgba(255,255,255,0.06); }
-
-.roadmap-progress-bar-wrap {
-  margin-top: 2.5rem;
-  margin-bottom: 3rem;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.roadmap-progress-labels {
-  display: flex; justify-content: space-between;
-  font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--muted);
-}
+.roadmap-progress-bar-wrap { margin-top: 2.5rem; margin-bottom: 3rem; display: flex; flex-direction: column; gap: 10px; }
+.roadmap-progress-labels { display: flex; justify-content: space-between; font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--muted); }
 .roadmap-progress-labels span { color: var(--accent2); }
-.roadmap-track {
-  height: 8px; background: rgba(255,255,255,0.06); position: relative; overflow: hidden;
-}
-.roadmap-track-fill {
-  height: 100%; width: 40%;
-  background: linear-gradient(90deg, var(--accent2), var(--accent));
-  position: relative;
-}
-.roadmap-track-fill::after {
-  content: '';
-  position: absolute; right: 0; top: 0; bottom: 0; width: 12px;
-  background: white; opacity: 0.4;
-  animation: digPulse 1.2s ease-in-out infinite;
-}
+.roadmap-track { height: 8px; background: rgba(255,255,255,0.06); position: relative; overflow: hidden; }
+.roadmap-track-fill { height: 100%; width: 40%; background: linear-gradient(90deg, var(--accent2), var(--accent)); position: relative; }
+.roadmap-track-fill::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 12px; background: white; opacity: 0.4; animation: digPulse 1.2s ease-in-out infinite; }
 @keyframes digPulse { 0%,100%{opacity:0.2;width:8px} 50%{opacity:0.7;width:16px} }
 
-.roadmap-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.roadmap-card {
-  background: var(--surface);
-  border: 2px solid rgba(255,255,255,0.06);
-  padding: 1.75rem 1.75rem 1.75rem 2rem;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-  cursor: default;
-}
-.roadmap-card::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-}
+.roadmap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.roadmap-card { background: var(--surface); border: 2px solid rgba(255,255,255,0.06); padding: 1.75rem 1.75rem 1.75rem 2rem; position: relative; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; cursor: default; }
+.roadmap-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
 .roadmap-card.done { border-color: rgba(255,215,0,0.2); }
 .roadmap-card.done::before { background: var(--accent2); }
 .roadmap-card.done:hover { transform: translateY(-4px); border-color: rgba(255,215,0,0.45); box-shadow: 0 8px 32px rgba(255,215,0,0.08); }
@@ -483,54 +423,22 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .roadmap-card.upcoming::before { background: rgba(138,122,106,0.4); }
 .roadmap-card.upcoming:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.12); }
 @keyframes activeBar { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
 .roadmap-card:last-child { grid-column: 1 / -1; }
-
-.roadmap-card-depth {
-  position: absolute; top: 1rem; right: 1rem;
-  font-family: 'Press Start 2P', monospace; font-size: 7px;
-  color: rgba(255,255,255,0.1); letter-spacing: 0.05em;
-}
-.roadmap-card-icon {
-  font-size: 28px; display: block; margin-bottom: 1rem; line-height: 1;
-  filter: grayscale(0.2);
-}
-.roadmap-card-status {
-  font-family: 'Press Start 2P', monospace; font-size: 8px;
-  padding: 3px 8px; display: inline-block; margin-bottom: 0.75rem;
-  letter-spacing: 0.05em;
-}
+.roadmap-card-depth { position: absolute; top: 1rem; right: 1rem; font-family: 'Press Start 2P', monospace; font-size: 7px; color: rgba(255,255,255,0.1); letter-spacing: 0.05em; }
+.roadmap-card-icon { font-size: 28px; display: block; margin-bottom: 1rem; line-height: 1; filter: grayscale(0.2); }
+.roadmap-card-status { font-family: 'Press Start 2P', monospace; font-size: 8px; padding: 3px 8px; display: inline-block; margin-bottom: 0.75rem; letter-spacing: 0.05em; }
 .status-done { background: rgba(255,215,0,0.12); color: var(--accent2); border: 1px solid rgba(255,215,0,0.3); }
 .status-active { background: rgba(255,107,53,0.12); color: var(--accent); border: 1px solid rgba(255,107,53,0.35); animation: statusBlink 2.5s ease-in-out infinite; }
 .status-upcoming { background: rgba(138,122,106,0.1); color: var(--muted); border: 1px solid rgba(138,122,106,0.2); }
 @keyframes statusBlink { 0%,100%{opacity:1} 50%{opacity:0.55} }
-
-.roadmap-card-phase {
-  font-family: 'Press Start 2P', monospace; font-size: 8px;
-  color: var(--muted); margin-bottom: 5px; letter-spacing: 0.08em;
-}
-.roadmap-card-title {
-  font-family: 'Press Start 2P', monospace; font-size: 12px;
-  color: var(--cream); margin-bottom: 12px; line-height: 1.7;
-}
+.roadmap-card-phase { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--muted); margin-bottom: 5px; letter-spacing: 0.08em; }
+.roadmap-card-title { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--cream); margin-bottom: 12px; line-height: 1.7; }
 .roadmap-card.done .roadmap-card-title { color: var(--light-sand); }
 .roadmap-card.active .roadmap-card-title { color: var(--cream); }
-
-.roadmap-card-desc {
-  font-family: 'VT323', monospace; font-size: 19px;
-  color: var(--sand); line-height: 1.55;
-}
+.roadmap-card-desc { font-family: 'VT323', monospace; font-size: 19px; color: var(--sand); line-height: 1.55; }
 .roadmap-card.upcoming .roadmap-card-desc { color: var(--muted); }
+.roadmap-card.done::after { content: '✓'; position: absolute; bottom: 1.25rem; right: 1.25rem; font-family: 'Press Start 2P', monospace; font-size: 14px; color: rgba(255,215,0,0.12); }
 
-/* checkmark stamp for done cards */
-.roadmap-card.done::after {
-  content: '✓';
-  position: absolute; bottom: 1.25rem; right: 1.25rem;
-  font-family: 'Press Start 2P', monospace; font-size: 14px;
-  color: rgba(255,215,0,0.12);
-}
-
-/* ── FAQ ── */
 .faq-section { border-top: 1px solid rgba(255,255,255,0.06); }
 .faq-list { margin-top: 3rem; display: flex; flex-direction: column; gap: 2px; }
 .faq-item { background: var(--surface); border-left: 3px solid transparent; transition: border-color 0.2s; }
@@ -541,7 +449,6 @@ section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
 .faq-a { font-family: 'VT323', monospace; font-size: 20px; color: var(--sand); padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; line-height: 1.6; }
 .faq-item.open .faq-a { max-height: 300px; padding: 0 1.5rem 1.25rem; }
 
-/* ── FOOTER ── */
 footer { background: var(--surface2); border-top: 2px solid rgba(255,255,255,0.06); padding: 3rem 2rem; text-align: center; }
 .footer-logo { font-family: 'Press Start 2P', monospace; font-size: 16px; color: var(--accent); margin-bottom: 1rem; }
 .footer-logo span { color: var(--accent2); }
@@ -550,7 +457,6 @@ footer { background: var(--surface2); border-top: 2px solid rgba(255,255,255,0.0
 .footer-links a:hover { color: var(--accent2); }
 .footer-copy { font-family: 'VT323', monospace; font-size: 17px; color: var(--muted); }
 
-/* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   background: rgba(26,15,5,0.92); backdrop-filter: blur(12px);
@@ -573,15 +479,12 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 .nav-wallet-btn:hover { background: var(--accent); color: white; }
 .nav-wallet-btn.connected { border-color: var(--success); color: var(--success); background: rgba(76,175,80,0.1); }
 
-/* ── PIXEL DIVIDER ── */
 .pixel-divider { height: 16px; background: repeating-linear-gradient(90deg, var(--accent) 0px, var(--accent) 8px, var(--accent2) 8px, var(--accent2) 16px, var(--grass) 16px, var(--grass) 24px, var(--dark-grass) 24px, var(--dark-grass) 32px); opacity: 0.5; }
 
-/* ── PREVIEW STRIP ── */
 .preview-strip { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
 .preview-strip canvas { image-rendering: pixelated; width: 72px; height: 72px; border: 2px solid rgba(255,255,255,0.08); transition: border-color 0.15s, transform 0.15s; cursor: pointer; }
 .preview-strip canvas:hover { border-color: var(--accent2); transform: scale(1.1) translateY(-4px); }
 
-/* ── TOAST ── */
 .toast {
   position: fixed; bottom: 2rem; right: 2rem; z-index: 20000;
   font-family: 'Press Start 2P', monospace; font-size: 9px; padding: 14px 18px;
@@ -604,10 +507,8 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 </head>
 <body>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">✕ Close</button>
   <div class="lightbox-inner">
@@ -622,7 +523,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
   </div>
 </div>
 
-<!-- NAV -->
 <nav id="main-nav">
   <div class="nav-logo">Diglett <span>Mugs</span></div>
   <ul class="nav-links">
@@ -638,7 +538,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
   <a href="https://x.com/DiglettMugs" target="_blank" rel="noopener" style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--muted);text-decoration:none;letter-spacing:0.05em;margin-left:1rem;transition:color 0.15s" onmouseover="this.style.color='var(--accent2)'" onmouseout="this.style.color='var(--muted)'">𝕏</a>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-sky"></div>
   <div class="aurora">
@@ -685,7 +584,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 
 <div class="pixel-divider"></div>
 
-<!-- LORE -->
 <div style="background:linear-gradient(180deg,var(--surface2) 0%,var(--surface) 100%)">
 <section id="lore" class="lore-section">
   <div class="section-label reveal">Origin Story</div>
@@ -709,7 +607,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 
 <div class="pixel-divider"></div>
 
-<!-- TRAITS -->
 <div style="background:var(--surface2)">
 <section id="traits" class="traits-section">
   <div class="section-label reveal">What Makes Them Unique</div>
@@ -732,7 +629,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 
 <div class="pixel-divider"></div>
 
-<!-- GALLERY -->
 <div style="background:var(--surface)">
 <section id="gallery" class="gallery-section">
   <div class="section-label reveal">The Collection</div>
@@ -746,13 +642,11 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
     <input type="number" class="gallery-search" placeholder="Seed / Token #" id="gallery-search" oninput="searchGallery(this.value)" min="1" max="9999"/>
   </div>
   <div class="gallery-grid" id="gallery-grid"></div>
-
 </section>
 </div>
 
 <div class="pixel-divider"></div>
 
-<!-- MINT -->
 <div style="background:var(--surface2)">
 <section id="mint" class="mint-section">
   <div class="section-label reveal" style="justify-content:center">Get Your Mug</div>
@@ -792,7 +686,7 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 
     <div class="mint-stats">
       <div class="mint-stat"><span class="mint-stat-val">5,000</span><span class="mint-stat-label">Total Supply</span></div>
-      <div class="mint-stat"><span class="mint-stat-val" id="minted-count">0</span><span class="mint-stat-label">Minted</span></div>
+      <div class="mint-stat"><span class="mint-stat-val" id="minted-count">—</span><span class="mint-stat-label">Minted</span></div>
       <div class="mint-stat"><span class="mint-stat-val">10</span><span class="mint-stat-label">Max/Txn</span></div>
     </div>
     <p class="wallet-note">Connect MetaMask, Coinbase Wallet, or any EIP-1193 provider.<br/>Mint price is 0.0003 ETH per Mug. Send exact amount — overpay is not refunded by the contract.</p>
@@ -802,7 +696,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 
 <div class="pixel-divider"></div>
 
-<!-- TEAM -->
 <div style="background:var(--surface)">
 <section id="team" class="team-section">
   <div class="section-label reveal">The Crew</div>
@@ -813,7 +706,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 
 <div class="pixel-divider"></div>
 
-<!-- ROADMAP -->
 <div style="background:var(--surface2)">
 <section id="roadmap" class="roadmap-section">
   <div class="section-label reveal">The Plan</div>
@@ -830,7 +722,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
   </div>
 
   <div class="roadmap-grid">
-
     <div class="roadmap-card done reveal">
       <div class="roadmap-card-depth">— 100m</div>
       <span class="roadmap-card-icon">⛏️</span>
@@ -839,7 +730,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
       <div class="roadmap-card-title">The First Tunnel</div>
       <div class="roadmap-card-desc">5,000 pixel faces hand-crafted from the underground up. Art engine finalized, all traits verified, smart contract audited and deployed. The Mugs exist. The dig is done.</div>
     </div>
-
     <div class="roadmap-card done reveal reveal-delay-1">
       <div class="roadmap-card-depth">— 200m</div>
       <span class="roadmap-card-icon">🌱</span>
@@ -848,7 +738,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
       <div class="roadmap-card-title">Surface Break</div>
       <div class="roadmap-card-desc">Public mint live. All 5,000 Diglett Mugs released to holders. First 500 minters received an exclusive golden trait. The underground went public and didn't look back.</div>
     </div>
-
     <div class="roadmap-card active reveal reveal-delay-2">
       <div class="roadmap-card-depth">— 300m</div>
       <span class="roadmap-card-icon">🎭</span>
@@ -857,7 +746,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
       <div class="roadmap-card-title">Faces Above Ground</div>
       <div class="roadmap-card-desc">Holder trait upgrades unlocked. Animated Mug previews rolling out — every face gets its own movement. Lore drops every month on Twitter. Community treasury vote launches Q2 2026.</div>
     </div>
-
     <div class="roadmap-card upcoming reveal reveal-delay-3">
       <div class="roadmap-card-depth">— 400m</div>
       <span class="roadmap-card-icon">🏗️</span>
@@ -866,7 +754,6 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
       <div class="roadmap-card-title">The Second Layer</div>
       <div class="roadmap-card-desc">A second collection surfaces — something that was always deeper down. Physical merch for all holders. Full animated series drops. New lore chapters. Something is moving beneath the dirt again.</div>
     </div>
-
     <div class="roadmap-card upcoming reveal reveal-delay-4">
       <div class="roadmap-card-depth">— 500m</div>
       <span class="roadmap-card-icon">🌍</span>
@@ -875,14 +762,12 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
       <div class="roadmap-card-title">The Underground Lives</div>
       <div class="roadmap-card-desc">Holder-exclusive interactive lore game. Token-gated collector events. Collaborative art with other pixel-native collections. The Diglett Mugs universe keeps expanding — they never were going back underground.</div>
     </div>
-
   </div>
 </section>
 </div>
 
 <div class="pixel-divider"></div>
 
-<!-- FAQ -->
 <div style="background:var(--surface)">
 <section id="faq" class="faq-section">
   <div class="section-label reveal">Questions From The Surface</div>
@@ -903,7 +788,8 @@ nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 <footer>
   <div class="footer-logo">Diglett <span>Mugs</span></div>
   <div class="footer-links">
-    <a href="https://opensea.io/collection/diglettmugs" target="_blank" rel="noopener">OpenSea</a><a href="https://x.com/DiglettMugs" target="_blank" rel="noopener">𝕏 Twitter</a>
+    <a href="https://opensea.io/collection/diglettmugs" target="_blank" rel="noopener">OpenSea</a>
+    <a href="https://x.com/DiglettMugs" target="_blank" rel="noopener">𝕏 Twitter</a>
   </div>
   <div class="footer-copy">© 2026 Diglett Mugs. 5,000 faces. Zero going back underground.</div>
 </footer>
@@ -919,8 +805,6 @@ const BG_C=['#7ba7e0','#8ab4f0','#6b9fd4','#a0c0e8','#b0d0f0','#90bce0'];
 const HW_KEYS=[null,'headphones_black','headphones_blue','headphones_red','cap_yellow','cap_purple','cap_white','cap_green','hardhat_white','hardhat_yellow','hardhat_blue','beanie_pink','crown','sunglasses_blue','sunglasses_red'];
 const TOPS=['#2a5a2a','#1a4a8a','#8a2a2a','#4a2a8a','#8a6a1a','#2a7a6a','#6a2a6a','#1a1a1a','#5a3a1a','#3a5a7a','#c8a000','#e05a00'];
 const ACCS=[null,null,null,'mic'];
-const TRAIT_NAMES={background:'Background',skin:'Skin Tone',hair:'Hair',top:'Top',headwear:'Headwear',accessory:'Accessory',eyeStyle:'Eyes',smileType:'Smile',hasMoustache:'Moustache',hasBeard:'Beard'};
-const RARITY_WEIGHTS={crown:5,mic:8,redEyes:10,beard:15,moustache:20};
 
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
 function lighten(hex,amt){let n=parseInt(hex.slice(1),16);let r=Math.min(255,Math.max(0,((n>>16)&0xff)+amt));let g=Math.min(255,Math.max(0,((n>>8)&0xff)+amt));let b=Math.min(255,Math.max(0,(n&0xff)+amt));return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');}
@@ -932,6 +816,7 @@ function buildTraits(seed){
 }
 
 function calcRarity(t){
+  const RARITY_WEIGHTS={crown:5,mic:8,redEyes:10,beard:15,moustache:20};
   let score=100;
   if(t.headwear==='crown') score-=RARITY_WEIGHTS.crown;
   if(t.accessory==='mic') score-=RARITY_WEIGHTS.mic;
@@ -1052,7 +937,6 @@ peekSeeds.forEach((seed,i)=>{
   digRow.appendChild(wrap);
 });
 
-// Lore canvases
 drawAvatar(document.getElementById('lore-canvas-1'),555444);
 drawAvatar(document.getElementById('lore-canvas-2'),112358);
 drawAvatar(document.getElementById('lore-canvas-3'),999888);
@@ -1117,11 +1001,9 @@ function filterGallery(f,btn){
   renderGallery();
 }
 
-function loadMoreGallery(){}
-
 function searchGallery(val){
   const v=parseInt(val);
-  if(val===''){ galleryFilter=document.querySelector('.gallery-filter-btn.active')?.dataset?.filter||'all'; renderGallery(); return; }
+  if(val===''){renderGallery();return;}
   if(!isNaN(v)&&v>0){
     const grid=document.getElementById('gallery-grid');grid.innerHTML='';
     const seed=v*137+31;
@@ -1144,7 +1026,7 @@ function openLightboxById(seed){
   drawAvatar(lbc,seed);
   const t=buildTraits(seed);
   const rs=calcRarity(t);
-  document.getElementById('lb-title').textContent=`Diglett Mug`;
+  document.getElementById('lb-title').textContent='Diglett Mug';
   document.getElementById('lb-rarity').textContent=`${rarityLabel(rs)} — Score: ${rs}`;
   const traitEl=document.getElementById('lb-traits');
   traitEl.innerHTML='';
@@ -1163,17 +1045,17 @@ function openLightboxById(seed){
   });
   lb.classList.add('open');
 }
-function closeLightbox(e){ if(e.target===document.getElementById('lightbox')) document.getElementById('lightbox').classList.remove('open'); }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElementById('lightbox').classList.remove('open'); });
+function closeLightbox(e){if(e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
 
 // ═══════════════════════════════════════════════
 // TEAM
 // ═══════════════════════════════════════════════
 const TEAM=[
   {seed:77777,name:'DirtMaster',role:'Founder & Artist',bio:'Spent 4 years as a pixel artist before going full crypto. Lives by the axiom: if it fits in 512px, it fits in the heart.',links:[]},
-  {seed:88888,name:'TunnelDev',role:'Smart Contract Lead',bio:'Solidity wizard who once found a bug in someone else\'s contract just by looking at the ABI. Probably still underground.',links:[]},
+  {seed:88888,name:'TunnelDev',role:'Smart Contract Lead',bio:"Solidity wizard who once found a bug in someone else's contract just by looking at the ABI. Probably still underground.",links:[]},
   {seed:55321,name:'SurfaceOps',role:'Community & Marketing',bio:'Turned a hobby community into a 40k-strong following. Knows everyone in Web3. Has probably DMd you before.',links:[]},
-  {seed:13579,name:'DeepLore',role:'Worldbuilding & Copy',bio:'Former fiction writer who got bit by the NFT bug. Responsible for why you\'re reading this right now.',links:[]},
+  {seed:13579,name:'DeepLore',role:'Worldbuilding & Copy',bio:"Former fiction writer who got bit by the NFT bug. Responsible for why you're reading this right now.",links:[]},
 ];
 const teamGrid=document.getElementById('team-grid');
 TEAM.forEach(m=>{
@@ -1193,7 +1075,7 @@ let walletAddress=null;
 let mintCount=1;
 
 async function connectWallet(){
-  if(walletAddress){ showToast('Already connected: '+shortAddr(walletAddress),'info'); return; }
+  if(walletAddress){showToast('Already connected: '+shortAddr(walletAddress),'info');return;}
   if(typeof window.ethereum==='undefined'){
     showToast('No wallet detected.\nInstall MetaMask or another EIP-1193 wallet.','error');
     return;
@@ -1209,10 +1091,8 @@ async function connectWallet(){
 
 function onWalletConnected(){
   const short=shortAddr(walletAddress);
-  // nav button
   const nb=document.getElementById('nav-wallet-btn');
   nb.textContent='⬡ '+short;nb.classList.add('connected');nb.onclick=()=>showToast('Connected: '+walletAddress,'info');
-  // mint section
   const ws=document.getElementById('wallet-status');ws.classList.add('connected');
   document.getElementById('wallet-address-display').textContent=short+' — Connected';
   const btn=document.getElementById('main-mint-btn');
@@ -1222,21 +1102,18 @@ function onWalletConnected(){
 }
 
 async function handleMintBtn(){
-  if(!walletAddress){ connectWallet(); return; }
+  if(!walletAddress){connectWallet();return;}
   await executeMint();
 }
 
 async function executeMint(){
-  if(typeof window.ethereum==='undefined'){ showToast('No wallet found.','error'); return; }
-
-  // ── Network check: must be Ethereum mainnet (chainId 0x1) ──
+  if(typeof window.ethereum==='undefined'){showToast('No wallet found.','error');return;}
   const chainId=await window.ethereum.request({method:'eth_chainId'});
   if(chainId!=='0x1'){
     showToast('Wrong network.\nPlease switch to Ethereum Mainnet.','error');
-    try{ await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x1'}]}); }catch(_){}
+    try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x1'}]});}catch(_){}
     return;
   }
-
   const btn=document.getElementById('main-mint-btn');
   btn.disabled=true;btn.textContent='⏳ Minting...';
   const txEl=document.getElementById('tx-status');
@@ -1245,22 +1122,16 @@ async function executeMint(){
   try{
     const CONTRACT='0xbfe940532b0e29652790c30c4fbd8d852fcfa2fe';
     const MINT_ABI_WRITE=['function mint(uint256 quantity) payable'];
-
-    // Use ethers Web3Provider — auto-estimates gas correctly, no manual encoding needed
     const provider=new ethers.providers.Web3Provider(window.ethereum);
     const signer=provider.getSigner();
     const contract=new ethers.Contract(CONTRACT,MINT_ABI_WRITE,signer);
-
-    // Use hardcoded wei to avoid any float precision issues
-    // 0.0003 ETH = 300000000000000 wei
     const pricePerToken=ethers.BigNumber.from('300000000000000');
     const totalWei=pricePerToken.mul(mintCount);
-
     const tx=await contract.mint(mintCount,{value:totalWei});
     txEl.className='tx-status pending';
     txEl.innerHTML=`⏳ Submitted! Waiting for confirmation...<br/><a href="https://etherscan.io/tx/${tx.hash}" target="_blank" style="color:var(--accent2);font-size:9px;word-break:break-all">${tx.hash} ↗</a>`;
     showToast('Mint TX submitted!\nCheck Etherscan for confirmation.','success');
-    await tx.wait(1); // wait for 1 confirmation
+    await tx.wait(1);
     txEl.className='tx-status success';
     txEl.innerHTML=`✓ Minted! <a href="https://etherscan.io/tx/${tx.hash}" target="_blank" style="color:var(--success);font-size:9px;word-break:break-all">View on Etherscan ↗</a>`;
     showToast('Mint confirmed!','success');
@@ -1276,7 +1147,7 @@ async function executeMint(){
   }
 }
 
-function shortAddr(addr){ return addr.slice(0,6)+'...'+addr.slice(-4); }
+function shortAddr(addr){return addr.slice(0,6)+'...'+addr.slice(-4);}
 
 if(typeof window.ethereum!=='undefined'){
   window.ethereum.on('accountsChanged',accs=>{
@@ -1286,9 +1157,9 @@ if(typeof window.ethereum!=='undefined'){
 }
 
 // ═══════════════════════════════════════════════
-// MINT COUNTER & PROGRESS
+// MINT COUNTER
 // ═══════════════════════════════════════════════
-let livePrice=0.0003; // updated by fetchLiveMintCount
+let livePrice=0.0003;
 
 function changeCount(d){
   mintCount=Math.max(1,Math.min(10,mintCount+d));
@@ -1308,48 +1179,81 @@ function updateMintedUI(n){
   document.getElementById('minted-label').textContent=n.toLocaleString()+' minted';
   document.getElementById('mint-progress-bar').style.width=(n/5000*100)+'%';
 }
+
 // ═══════════════════════════════════════════════
-// LIVE MINT COUNT (ethers.js)
+// LIVE MINT COUNT — tries multiple function names
+// and multiple RPC endpoints, never silently fails
 // ═══════════════════════════════════════════════
 const CONTRACT_ADDRESS='0xbfe940532b0e29652790c30c4fbd8d852fcfa2fe';
-const MINT_ABI=[
+
+// Wide ABI — covers ERC-721A, standard ERC-721, and common custom names
+const MINT_ABI_WIDE=[
   'function totalMinted() view returns (uint256)',
-  'function remaining() view returns (uint256)',
-  'function mintPrice() view returns (uint96)',
+  'function _totalMinted() view returns (uint256)',
+  'function totalSupply() view returns (uint256)',
+  'function minted() view returns (uint256)',
+  'function mintPrice() view returns (uint256)',
+  'function price() view returns (uint256)',
+  'function cost() view returns (uint256)',
   'function mintOpen() view returns (bool)',
-  'function MAX_SUPPLY() view returns (uint256)'
+  'function mintActive() view returns (bool)',
+  'function saleActive() view returns (bool)',
+  'function publicSale() view returns (bool)',
+  'function MAX_SUPPLY() view returns (uint256)',
+  'function maxSupply() view returns (uint256)',
 ];
-const RPC_URL='https://eth.llamarpc.com';
+
+const RPCS=[
+  'https://eth.llamarpc.com',
+  'https://cloudflare-eth.com',
+  'https://rpc.ankr.com/eth',
+];
 
 async function fetchLiveMintCount(){
-  try{
-    const provider=new ethers.providers.JsonRpcProvider(RPC_URL);
-    const contract=new ethers.Contract(CONTRACT_ADDRESS,MINT_ABI,provider);
-    const [total,open,price]=await Promise.all([
-      contract.totalMinted(),
-      contract.mintOpen(),
-      contract.mintPrice()
-    ]);
-    minted=total.toNumber();
-    updateMintedUI(minted);
-    // Reflect on-chain mint state
-    if(!open){
-      const btn=document.getElementById('main-mint-btn');
-      if(btn&&!walletAddress){
-        btn.textContent='⛏ Mint Closed';btn.disabled=true;
-      }
+  const TOTAL_FUNS=['totalMinted','_totalMinted','totalSupply','minted'];
+  const PRICE_FUNS=['mintPrice','price','cost'];
+  const OPEN_FUNS=['mintOpen','mintActive','saleActive','publicSale'];
+
+  async function tryFn(contract,names){
+    for(const n of names){
+      try{return await contract[n]();}catch(_){}
     }
-    // Sync price display in case owner changed it
-    const priceEth=ethers.utils.formatEther(price);
-    livePrice=parseFloat(priceEth);
-    document.querySelectorAll('.mint-price').forEach(el=>el.textContent=priceEth+' ETH');
-    document.getElementById('mint-total').textContent=(mintCount*livePrice).toFixed(4)+' ETH';
-  }catch(e){
-    // RPC error — keep current display
+    return null;
   }
+
+  for(const rpc of RPCS){
+    try{
+      const provider=new ethers.providers.JsonRpcProvider(rpc);
+      const contract=new ethers.Contract(CONTRACT_ADDRESS,MINT_ABI_WIDE,provider);
+
+      const total=await tryFn(contract,TOTAL_FUNS);
+      if(total===null) continue; // function not found on this contract — try next RPC
+
+      minted=total.toNumber();
+      updateMintedUI(minted);
+
+      const open=await tryFn(contract,OPEN_FUNS);
+      if(open!==null&&open===false){
+        const btn=document.getElementById('main-mint-btn');
+        if(btn&&!walletAddress){btn.textContent='⛏ Mint Closed';btn.disabled=true;}
+      }
+
+      const price=await tryFn(contract,PRICE_FUNS);
+      if(price!==null){
+        const priceEth=ethers.utils.formatEther(price);
+        livePrice=parseFloat(priceEth);
+        document.querySelectorAll('.mint-price').forEach(el=>el.textContent=priceEth+' ETH');
+        document.getElementById('mint-total').textContent=(mintCount*livePrice).toFixed(4)+' ETH';
+      }
+
+      return; // success
+    }catch(e){
+      // this RPC failed entirely — try the next one
+    }
+  }
+  // All RPCs failed — leave display as-is, will retry on next interval
 }
 
-// Poll every 15 seconds for live updates
 fetchLiveMintCount();
 setInterval(fetchLiveMintCount,15000);
 
@@ -1370,25 +1274,24 @@ function showToast(msg,type='info'){
 function toggleFaq(el){
   const item=el.parentElement;const wasOpen=item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
-  if(!wasOpen) item.classList.add('open');
+  if(!wasOpen)item.classList.add('open');
 }
 
 // ═══════════════════════════════════════════════
 // SCROLL ANIMATIONS
 // ═══════════════════════════════════════════════
 const observer=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
 },{threshold:0.12});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
-// NAV scroll state & active link
 window.addEventListener('scroll',()=>{
   document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>40);
   const sections=['lore','traits','gallery','mint','team','roadmap','faq'];
   let current='';
   sections.forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
-    if(window.scrollY>=el.offsetTop-120) current=id;
+    if(window.scrollY>=el.offsetTop-120)current=id;
   });
   document.querySelectorAll('.nav-links a').forEach(a=>{
     a.classList.toggle('active',a.getAttribute('href')==='#'+current);
