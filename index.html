@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Diglett Mugs — 5,000 Pixel Faces From Below</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%233B2409'/%3E%3C!-- skin --%3E%3Crect x='4' y='2' width='8' height='8' fill='%23c8824d'/%3E%3Crect x='3' y='3' width='1' height='6' fill='%23c8824d'/%3E%3Crect x='12' y='3' width='1' height='6' fill='%23c8824d'/%3E%3C!-- eyes --%3E%3Crect x='5' y='4' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='9' y='4' width='2' height='2' fill='%231a1a1a'/%3E%3Crect x='5' y='4' width='1' height='1' fill='white'/%3E%3Crect x='9' y='4' width='1' height='1' fill='white'/%3E%3C!-- nose --%3E%3Crect x='7' y='6' width='2' height='1' fill='%23a0522d'/%3E%3C!-- mouth --%3E%3Crect x='5' y='8' width='6' height='1' fill='%231a1a1a'/%3E%3Crect x='6' y='9' width='4' height='1' fill='%231a1a1a'/%3E%3C!-- neck --%3E%3Crect x='5' y='10' width='6' height='4' fill='%23c8824d'/%3E%3C!-- dirt --%3E%3Crect x='0' y='13' width='16' height='3' fill='%235C3D1E'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js" type="application/javascript"></script>
+<style>
+:root {
+  --dirt: #8B5E3C;
+  --dark-dirt: #5C3D1E;
+  --deeper-dirt: #3B2409;
+  --sand: #D4A96A;
+  --light-sand: #F0D090;
+  --sky: #87CEEB;
+  --grass: #4CAF50;
+  --dark-grass: #2E7D32;
+  --cream: #FFF8E7;
+  --pixel-black: #1a1a1a;
+  --accent: #FF6B35;
+  --accent2: #FFD700;
+  --accent3: #7EB8F7;
+  --muted: #8a7a6a;
+  --surface: #2a1a0a;
+  --surface2: #1a0f05;
+  --success: #4CAF50;
+  --error: #f44336;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface2);
+  color: var(--cream);
+  font-family: 'Space Mono', monospace;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect x='6' y='0' width='4' height='4' fill='%23FFD700'/%3E%3Crect x='4' y='4' width='8' height='4' fill='%23FFD700'/%3E%3Crect x='2' y='8' width='12' height='4' fill='%23FFD700'/%3E%3Crect x='4' y='12' width='8' height='4' fill='%23FFD700'/%3E%3C/svg%3E") 8 8, auto;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.4;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none; z-index: 9998;
+}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; padding: 2rem;
+}
+.hero-sky {
+  position: absolute; top: 0; left: 0; right: 0; height: 55%;
+  background: linear-gradient(180deg, #0a1628 0%, #0d2140 40%, #1a3a5c 80%, #2d5a7a 100%);
+}
+.stars { position: absolute; top: 0; left: 0; right: 0; height: 55%; overflow: hidden; }
+.star {
+  position: absolute; width: 2px; height: 2px; background: white;
+  animation: twinkle var(--dur, 3s) var(--delay, 0s) infinite;
+}
+@keyframes twinkle { 0%,100%{opacity:1} 50%{opacity:0.1} }
+.moon { position: absolute; top: 8%; right: 12%; width: 64px; height: 64px; image-rendering: pixelated; }
+
+/* ── AURORA ── */
+.aurora {
+  position: absolute; top: 0; left: 0; right: 0; height: 55%;
+  overflow: hidden; pointer-events: none;
+}
+.aurora-band {
+  position: absolute;
+  width: 200%; height: 80px;
+  left: -50%;
+  border-radius: 50%;
+  animation: auroraWave var(--adur, 8s) var(--adelay, 0s) ease-in-out infinite alternate;
+  opacity: 0.12;
+}
+.aurora-band:nth-child(1) { top: 20%; background: linear-gradient(90deg, transparent, #00ff88, #00ffcc, transparent); --adur:9s; --adelay:0s; }
+.aurora-band:nth-child(2) { top: 30%; background: linear-gradient(90deg, transparent, #4488ff, #88ccff, transparent); --adur:11s; --adelay:2s; }
+.aurora-band:nth-child(3) { top: 15%; background: linear-gradient(90deg, transparent, #ff44aa, #ff88cc, transparent); --adur:13s; --adelay:4s; opacity:0.07; }
+@keyframes auroraWave { 0%{transform:translateX(-10%) scaleY(1)} 100%{transform:translateX(10%) scaleY(1.4)} }
+
+.ground-section { position: absolute; bottom: 0; left: 0; right: 0; height: 48%; }
+.grass-layer { position: absolute; top: 0; left: 0; right: 0; height: 24px; background: var(--dark-grass); }
+.grass-layer::before {
+  content: '';
+  position: absolute; top: -12px; left: 0; right: 0; height: 12px;
+  background: repeating-linear-gradient(90deg,
+    var(--grass) 0px, var(--grass) 8px, var(--dark-grass) 8px,
+    var(--dark-grass) 16px, var(--grass) 16px, var(--grass) 24px,
+    transparent 24px, transparent 32px);
+}
+.dirt-layer { position: absolute; top: 24px; left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, var(--dark-dirt) 0%, var(--deeper-dirt) 100%); }
+.dirt-texture {
+  position: absolute; top: 24px; left: 0; right: 0; bottom: 0;
+  background-image:
+    radial-gradient(circle 2px at 15% 20%, rgba(255,255,255,0.06) 0%, transparent 100%),
+    radial-gradient(circle 2px at 45% 60%, rgba(255,255,255,0.04) 0%, transparent 100%),
+    radial-gradient(circle 3px at 75% 30%, rgba(255,255,255,0.05) 0%, transparent 100%),
+    radial-gradient(circle 2px at 90% 70%, rgba(255,255,255,0.04) 0%, transparent 100%);
+}
+
+/* ── FIREFLIES ── */
+.firefly {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: var(--accent2);
+  border-radius: 50%;
+  box-shadow: 0 0 6px 2px rgba(255,215,0,0.6);
+  animation: fireflyFloat var(--fdur,6s) var(--fdelay,0s) ease-in-out infinite;
+  z-index: 5;
+}
+@keyframes fireflyFloat {
+  0%{transform:translate(0,0);opacity:0}
+  20%{opacity:1}
+  50%{transform:translate(var(--fx,40px),var(--fy,-60px));opacity:0.8}
+  80%{opacity:0.3}
+  100%{transform:translate(var(--fx2,20px),var(--fy2,-120px));opacity:0}
+}
+
+.diglett-row {
+  position: absolute; bottom: 38%; left: 0; right: 0;
+  display: flex; justify-content: space-around; align-items: flex-end;
+  padding: 0 5%; z-index: 10;
+}
+.diglett-peek {
+  display: flex; flex-direction: column; align-items: center;
+  animation: peek var(--pdur, 4s) var(--pdelay, 0s) ease-in-out infinite;
+  transform-origin: bottom center;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.diglett-peek:hover { filter: drop-shadow(0 0 8px var(--accent2)); }
+@keyframes peek { 0%,100%{transform:translateY(0)} 40%{transform:translateY(-18px)} 60%{transform:translateY(-14px)} }
+.diglett-face { image-rendering: pixelated; width: var(--fsize, 48px); height: var(--fsize, 48px); }
+.diglett-neck { width: var(--nw, 20px); height: var(--nh, 28px); background: var(--skin, #c8824d); border-radius: 0 0 3px 3px; }
+
+/* ── HERO CONTENT ── */
+.hero-content {
+  position: absolute;
+  top: 7%;
+  left: 0; right: 0;
+  z-index: 20; text-align: center;
+  padding: 0 2rem;
+}
+.logo-eyebrow {
+  font-family: 'Press Start 2P', monospace; font-size: 10px;
+  color: var(--accent2); letter-spacing: 0.3em; text-transform: uppercase;
+  margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
+}
+.logo-title {
+  font-family: 'Press Start 2P', monospace; font-size: clamp(28px, 6vw, 64px);
+  line-height: 1.4; color: var(--cream);
+  text-shadow: 4px 4px 0 var(--deeper-dirt), 8px 8px 0 rgba(0,0,0,0.4);
+  opacity: 0; animation: fadeUp 0.6s 0.4s forwards; margin-bottom: 1rem;
+}
+.logo-title span { color: var(--accent); }
+.logo-sub {
+  font-family: 'VT323', monospace; font-size: clamp(20px, 3vw, 28px);
+  color: var(--sand); letter-spacing: 0.1em;
+  opacity: 0; animation: fadeUp 0.6s 0.6s forwards; margin-bottom: 2.5rem;
+}
+.hero-badges {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.6s 1.0s forwards;
+  z-index: 15; white-space: nowrap;
+  margin-top: 1.5rem;
+}
+.badge {
+  font-family: 'Press Start 2P', monospace; font-size: 9px; padding: 8px 14px;
+  border: 2px solid var(--accent2); color: var(--accent2);
+  background: rgba(255,215,0,0.08); letter-spacing: 0.05em;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+.badge:nth-child(2) { animation-delay: 0.5s; }
+.badge:nth-child(3) { animation-delay: 1s; }
+.badge:nth-child(4) { animation-delay: 1.5s; }
+@keyframes badgePulse { 0%,100%{border-color:var(--accent2)} 50%{border-color:var(--accent)} }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.scroll-hint {
+  position: absolute; bottom: 50%; left: 50%; transform: translateX(-50%);
+  z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: fadeUp 0.6s 1.2s forwards;
+}
+.scroll-hint span { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--muted); letter-spacing: 0.2em; }
+.scroll-arrow { width: 16px; height: 16px; border-right: 3px solid var(--muted); border-bottom: 3px solid var(--muted); transform: rotate(45deg); animation: bounce 1.4s infinite; }
+@keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(6px)} }
+
+/* ── LAYOUT ── */
+section { max-width: 1100px; margin: 0 auto; padding: 6rem 2rem; }
+.section-label {
+  font-family: 'Press Start 2P', monospace; font-size: 9px;
+  color: var(--accent); letter-spacing: 0.3em; text-transform: uppercase;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 12px;
+}
+.section-label::before { content: '▶'; color: var(--accent2); }
+.section-title { font-family: 'Press Start 2P', monospace; font-size: clamp(16px, 3vw, 28px); line-height: 1.6; margin-bottom: 2rem; color: var(--cream); }
+
+/* ── LORE ── */
+.lore-section { background: linear-gradient(180deg, var(--surface2) 0%, var(--surface) 50%, var(--surface2) 100%); position: relative; overflow: hidden; }
+.lore-section::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, transparent 0px, transparent 31px, rgba(255,255,255,0.015) 31px, rgba(255,255,255,0.015) 32px); }
+.lore-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+.lore-text p { font-family: 'VT323', monospace; font-size: 22px; line-height: 1.7; color: var(--sand); margin-bottom: 1.2rem; }
+.lore-text p strong { color: var(--accent2); font-style: normal; }
+.lore-text blockquote { border-left: 3px solid var(--accent); padding-left: 1.2rem; margin: 2rem 0; font-family: 'Press Start 2P', monospace; font-size: 11px; line-height: 2; color: var(--accent); font-style: italic; }
+.lore-art { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+
+/* ── TRAITS ── */
+.traits-section { border-top: 1px solid rgba(255,255,255,0.06); }
+.traits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); margin-top: 3rem; }
+.trait-card { background: var(--surface); padding: 1.5rem; transition: background 0.15s, transform 0.2s; cursor: default; }
+.trait-card:hover { background: var(--dark-dirt); transform: scale(1.02); z-index: 1; position: relative; }
+.trait-icon { font-size: 28px; margin-bottom: 0.75rem; display: block; }
+.trait-name { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--accent2); margin-bottom: 0.5rem; }
+.trait-desc { font-family: 'VT323', monospace; font-size: 18px; color: var(--muted); line-height: 1.4; }
+.trait-count { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); margin-top: 0.75rem; }
+
+/* ── GALLERY ── */
+.gallery-section { border-top: 1px solid rgba(255,255,255,0.06); }
+.gallery-controls {
+  display: flex; gap: 12px; margin-bottom: 2rem; flex-wrap: wrap; align-items: center;
+}
+.gallery-filter-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 9px; padding: 8px 14px;
+  background: var(--surface); border: 2px solid rgba(255,255,255,0.1);
+  color: var(--muted); cursor: pointer; transition: all 0.15s; letter-spacing: 0.05em;
+}
+.gallery-filter-btn:hover, .gallery-filter-btn.active { border-color: var(--accent2); color: var(--accent2); background: rgba(255,215,0,0.08); }
+.gallery-search {
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  background: var(--surface); border: 2px solid rgba(255,255,255,0.1);
+  color: var(--cream); padding: 8px 14px; outline: none; margin-left: auto;
+  width: 200px; transition: border-color 0.15s;
+}
+.gallery-search:focus { border-color: var(--accent2); }
+.gallery-search::placeholder { color: var(--muted); }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.gallery-item {
+  position: relative; cursor: pointer; overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.06);
+  transition: border-color 0.2s, transform 0.2s;
+  background: var(--surface);
+}
+.gallery-item:hover { border-color: var(--accent2); transform: translateY(-4px); }
+.gallery-item canvas { display: block; width: 100%; image-rendering: pixelated; }
+.gallery-item-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(26,15,5,0.9); padding: 6px;
+  font-family: 'Press Start 2P', monospace; font-size: 7px;
+  color: var(--accent2); text-align: center;
+  transform: translateY(100%); transition: transform 0.2s;
+}
+.gallery-item:hover .gallery-item-label { transform: translateY(0); }
+.gallery-item .rarity-badge {
+  position: absolute; top: 6px; right: 6px;
+  font-family: 'Press Start 2P', monospace; font-size: 7px;
+  padding: 3px 6px; background: var(--accent); color: white;
+  opacity: 0; transition: opacity 0.2s;
+}
+.gallery-item:hover .rarity-badge { opacity: 1; }
+
+.gallery-load-more {
+  text-align: center; margin-top: 2rem;
+}
+.load-more-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 10px; padding: 14px 32px;
+  background: transparent; border: 2px solid var(--accent); color: var(--accent);
+  cursor: pointer; letter-spacing: 0.1em; transition: all 0.15s;
+}
+.load-more-btn:hover { background: var(--accent); color: white; }
+
+/* ── LIGHTBOX ── */
+.lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.lightbox.open { opacity: 1; pointer-events: all; }
+.lightbox-inner {
+  display: flex; gap: 3rem; align-items: flex-start;
+  max-width: 800px; width: 90%; padding: 2rem;
+  transform: scale(0.9); transition: transform 0.3s;
+}
+.lightbox.open .lightbox-inner { transform: scale(1); }
+.lightbox-canvas-wrap { flex-shrink: 0; }
+.lightbox canvas { image-rendering: pixelated; width: 240px; height: 240px; border: 3px solid var(--accent); box-shadow: 8px 8px 0 var(--deeper-dirt); }
+.lightbox-info { flex: 1; }
+.lightbox-title { font-family: 'Press Start 2P', monospace; font-size: 16px; color: var(--cream); margin-bottom: 0.5rem; }
+.lightbox-id { font-family: 'VT323', monospace; font-size: 20px; color: var(--muted); margin-bottom: 2rem; }
+.lightbox-traits { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
+.lightbox-trait { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--surface); }
+.lightbox-trait-name { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--muted); }
+.lightbox-trait-val { font-family: 'VT323', monospace; font-size: 18px; color: var(--accent2); }
+.lightbox-rarity { font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--accent); margin-bottom: 1.5rem; }
+.lightbox-close {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  font-family: 'Press Start 2P', monospace; font-size: 12px;
+  background: none; border: 2px solid var(--muted); color: var(--muted);
+  padding: 8px 12px; cursor: pointer; transition: all 0.15s;
+}
+.lightbox-close:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── MINT ── */
+.mint-section { text-align: center; position: relative; }
+.mint-section::before {
+  content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.mint-box {
+  display: inline-block; background: var(--surface); border: 2px solid var(--accent);
+  padding: 3rem 4rem; position: relative; z-index: 1; max-width: 540px; width: 100%;
+}
+.mint-box::before { content: ''; position: absolute; inset: -6px; border: 1px solid rgba(255,107,53,0.2); pointer-events: none; }
+.mint-box::after { content: '★ MINT ★'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--surface); padding: 0 12px; font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--accent); letter-spacing: 0.2em; }
+.mint-price { font-family: 'Press Start 2P', monospace; font-size: 32px; color: var(--accent2); margin-bottom: 0.5rem; text-shadow: 3px 3px 0 var(--deeper-dirt); }
+.mint-price-label { font-family: 'VT323', monospace; font-size: 20px; color: var(--muted); margin-bottom: 2rem; }
+.mint-counter { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+.counter-btn { font-family: 'Press Start 2P', monospace; font-size: 16px; width: 44px; height: 44px; background: var(--dark-dirt); border: 2px solid var(--accent2); color: var(--accent2); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; justify-content: center; }
+.counter-btn:hover { background: var(--accent2); color: var(--pixel-black); }
+.counter-btn:active { transform: scale(0.94); }
+.counter-val { font-family: 'Press Start 2P', monospace; font-size: 28px; color: var(--cream); min-width: 56px; text-align: center; }
+
+/* ── WEB3 STATES ── */
+.wallet-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 11px; padding: 16px 32px;
+  border: none; cursor: pointer; letter-spacing: 0.06em; position: relative;
+  transition: all 0.1s; width: 100%;
+  box-shadow: 4px 4px 0 var(--deeper-dirt), 6px 6px 0 rgba(0,0,0,0.3);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.wallet-btn.connect { background: var(--accent); color: white; }
+.wallet-btn.connect:hover { background: #ff8555; transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--deeper-dirt), 8px 8px 0 rgba(0,0,0,0.3); }
+.wallet-btn.mint-action { background: var(--accent2); color: var(--pixel-black); }
+.wallet-btn.mint-action:hover { background: #ffe44d; transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--deeper-dirt), 8px 8px 0 rgba(0,0,0,0.3); }
+.wallet-btn:active { transform: translate(2px,2px) !important; box-shadow: 2px 2px 0 var(--deeper-dirt) !important; }
+.wallet-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+.wallet-status {
+  margin-bottom: 1.5rem; padding: 10px 16px;
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  display: none; align-items: center; gap: 10px;
+}
+.wallet-status.connected { display: flex; background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.3); color: var(--success); }
+.wallet-status.error { display: flex; background: rgba(244,67,54,0.12); border: 1px solid rgba(244,67,54,0.3); color: var(--error); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex-shrink: 0; animation: statusPulse 2s infinite; }
+@keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.tx-status {
+  margin-top: 1.5rem; padding: 12px 16px; display: none;
+  font-family: 'Space Mono', monospace; font-size: 10px; line-height: 1.8;
+}
+.tx-status.pending { display: block; background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.3); color: var(--accent2); }
+.tx-status.success { display: block; background: rgba(76,175,80,0.08); border: 1px solid rgba(76,175,80,0.3); color: var(--success); }
+.tx-status.fail { display: block; background: rgba(244,67,54,0.08); border: 1px solid rgba(244,67,54,0.3); color: var(--error); }
+
+/* progress bar */
+.mint-progress { margin: 2rem 0 0.5rem; background: var(--surface2); height: 8px; position: relative; border: 1px solid rgba(255,255,255,0.1); }
+.mint-progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 1s ease; position: relative; }
+.mint-progress-bar::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; background: white; animation: scanline 1s ease-in-out infinite; }
+@keyframes scanline { 0%,100%{opacity:1} 50%{opacity:0} }
+.mint-progress-label { display: flex; justify-content: space-between; font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 6px; }
+
+.mint-stats { display: flex; gap: 2px; margin-top: 2rem; }
+.mint-stat { flex: 1; background: var(--surface2); padding: 1rem 0.5rem; text-align: center; }
+.mint-stat-val { font-family: 'Press Start 2P', monospace; font-size: 14px; color: var(--accent2); display: block; margin-bottom: 6px; }
+.mint-stat-label { font-family: 'VT323', monospace; font-size: 16px; color: var(--muted); }
+.wallet-note { font-family: 'VT323', monospace; font-size: 17px; color: var(--muted); margin-top: 1.5rem; line-height: 1.6; }
+
+/* ── TEAM ── */
+.team-section { border-top: 1px solid rgba(255,255,255,0.06); }
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 2px; margin-top: 3rem; }
+.team-card {
+  background: var(--surface); padding: 2.5rem 2rem; text-align: center;
+  transition: background 0.15s, transform 0.2s; position: relative; overflow: hidden;
+}
+.team-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,107,53,0.05) 0%, transparent 60%);
+  opacity: 0; transition: opacity 0.2s;
+}
+.team-card:hover { background: var(--dark-dirt); transform: translateY(-4px); }
+.team-card:hover::before { opacity: 1; }
+.team-avatar { width: 96px; height: 96px; margin: 0 auto 1.5rem; image-rendering: pixelated; display: block; border: 3px solid rgba(255,255,255,0.1); transition: border-color 0.2s; }
+.team-card:hover .team-avatar { border-color: var(--accent2); }
+.team-name { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--accent2); margin-bottom: 0.5rem; }
+.team-role { font-family: 'VT323', monospace; font-size: 20px; color: var(--accent); margin-bottom: 1rem; }
+.team-bio { font-family: 'VT323', monospace; font-size: 18px; color: var(--muted); line-height: 1.5; }
+.team-links { display: flex; gap: 10px; justify-content: center; margin-top: 1rem; }
+.team-link {
+  font-family: 'Press Start 2P', monospace; font-size: 8px; padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,0.15); color: var(--muted); text-decoration: none;
+  transition: all 0.15s;
+}
+.team-link:hover { border-color: var(--accent2); color: var(--accent2); }
+
+/* ── ROADMAP ── */
+.roadmap-section { border-top: 1px solid rgba(255,255,255,0.06); }
+
+.roadmap-progress-bar-wrap {
+  margin-top: 2.5rem;
+  margin-bottom: 3rem;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.roadmap-progress-labels {
+  display: flex; justify-content: space-between;
+  font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--muted);
+}
+.roadmap-progress-labels span { color: var(--accent2); }
+.roadmap-track {
+  height: 8px; background: rgba(255,255,255,0.06); position: relative; overflow: hidden;
+}
+.roadmap-track-fill {
+  height: 100%; width: 40%;
+  background: linear-gradient(90deg, var(--accent2), var(--accent));
+  position: relative;
+}
+.roadmap-track-fill::after {
+  content: '';
+  position: absolute; right: 0; top: 0; bottom: 0; width: 12px;
+  background: white; opacity: 0.4;
+  animation: digPulse 1.2s ease-in-out infinite;
+}
+@keyframes digPulse { 0%,100%{opacity:0.2;width:8px} 50%{opacity:0.7;width:16px} }
+
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.roadmap-card {
+  background: var(--surface);
+  border: 2px solid rgba(255,255,255,0.06);
+  padding: 1.75rem 1.75rem 1.75rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: default;
+}
+.roadmap-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+.roadmap-card.done { border-color: rgba(255,215,0,0.2); }
+.roadmap-card.done::before { background: var(--accent2); }
+.roadmap-card.done:hover { transform: translateY(-4px); border-color: rgba(255,215,0,0.45); box-shadow: 0 8px 32px rgba(255,215,0,0.08); }
+.roadmap-card.active { border-color: rgba(255,107,53,0.35); box-shadow: 0 0 28px rgba(255,107,53,0.1); }
+.roadmap-card.active::before { background: var(--accent); animation: activeBar 2s ease-in-out infinite; }
+.roadmap-card.active:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(255,107,53,0.18); }
+.roadmap-card.upcoming::before { background: rgba(138,122,106,0.4); }
+.roadmap-card.upcoming:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.12); }
+@keyframes activeBar { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.roadmap-card:last-child { grid-column: 1 / -1; }
+
+.roadmap-card-depth {
+  position: absolute; top: 1rem; right: 1rem;
+  font-family: 'Press Start 2P', monospace; font-size: 7px;
+  color: rgba(255,255,255,0.1); letter-spacing: 0.05em;
+}
+.roadmap-card-icon {
+  font-size: 28px; display: block; margin-bottom: 1rem; line-height: 1;
+  filter: grayscale(0.2);
+}
+.roadmap-card-status {
+  font-family: 'Press Start 2P', monospace; font-size: 8px;
+  padding: 3px 8px; display: inline-block; margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+}
+.status-done { background: rgba(255,215,0,0.12); color: var(--accent2); border: 1px solid rgba(255,215,0,0.3); }
+.status-active { background: rgba(255,107,53,0.12); color: var(--accent); border: 1px solid rgba(255,107,53,0.35); animation: statusBlink 2.5s ease-in-out infinite; }
+.status-upcoming { background: rgba(138,122,106,0.1); color: var(--muted); border: 1px solid rgba(138,122,106,0.2); }
+@keyframes statusBlink { 0%,100%{opacity:1} 50%{opacity:0.55} }
+
+.roadmap-card-phase {
+  font-family: 'Press Start 2P', monospace; font-size: 8px;
+  color: var(--muted); margin-bottom: 5px; letter-spacing: 0.08em;
+}
+.roadmap-card-title {
+  font-family: 'Press Start 2P', monospace; font-size: 12px;
+  color: var(--cream); margin-bottom: 12px; line-height: 1.7;
+}
+.roadmap-card.done .roadmap-card-title { color: var(--light-sand); }
+.roadmap-card.active .roadmap-card-title { color: var(--cream); }
+
+.roadmap-card-desc {
+  font-family: 'VT323', monospace; font-size: 19px;
+  color: var(--sand); line-height: 1.55;
+}
+.roadmap-card.upcoming .roadmap-card-desc { color: var(--muted); }
+
+/* checkmark stamp for done cards */
+.roadmap-card.done::after {
+  content: '✓';
+  position: absolute; bottom: 1.25rem; right: 1.25rem;
+  font-family: 'Press Start 2P', monospace; font-size: 14px;
+  color: rgba(255,215,0,0.12);
+}
+
+/* ── FAQ ── */
+.faq-section { border-top: 1px solid rgba(255,255,255,0.06); }
+.faq-list { margin-top: 3rem; display: flex; flex-direction: column; gap: 2px; }
+.faq-item { background: var(--surface); border-left: 3px solid transparent; transition: border-color 0.2s; }
+.faq-item:hover { border-color: var(--accent); }
+.faq-q { font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--cream); padding: 1.25rem 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; line-height: 1.7; user-select: none; }
+.faq-q::after { content: '▼'; font-size: 10px; color: var(--accent2); transition: transform 0.2s; flex-shrink: 0; margin-left: 1rem; }
+.faq-item.open .faq-q::after { transform: rotate(180deg); }
+.faq-a { font-family: 'VT323', monospace; font-size: 20px; color: var(--sand); padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.2s; line-height: 1.6; }
+.faq-item.open .faq-a { max-height: 300px; padding: 0 1.5rem 1.25rem; }
+
+/* ── FOOTER ── */
+footer { background: var(--surface2); border-top: 2px solid rgba(255,255,255,0.06); padding: 3rem 2rem; text-align: center; }
+.footer-logo { font-family: 'Press Start 2P', monospace; font-size: 16px; color: var(--accent); margin-bottom: 1rem; }
+.footer-logo span { color: var(--accent2); }
+.footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+.footer-links a { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; transition: color 0.15s; }
+.footer-links a:hover { color: var(--accent2); }
+.footer-copy { font-family: 'VT323', monospace; font-size: 17px; color: var(--muted); }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(26,15,5,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 2rem; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: box-shadow 0.3s;
+}
+nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+.nav-logo { font-family: 'Press Start 2P', monospace; font-size: 13px; color: var(--cream); }
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--muted); text-decoration: none; letter-spacing: 0.1em; transition: color 0.15s; }
+.nav-links a:hover, .nav-links a.active { color: var(--accent2); }
+.nav-wallet-btn {
+  font-family: 'Press Start 2P', monospace; font-size: 9px; padding: 8px 14px;
+  background: rgba(255,107,53,0.15); border: 1px solid var(--accent); color: var(--accent);
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.05em;
+}
+.nav-wallet-btn:hover { background: var(--accent); color: white; }
+.nav-wallet-btn.connected { border-color: var(--success); color: var(--success); background: rgba(76,175,80,0.1); }
+
+/* ── PIXEL DIVIDER ── */
+.pixel-divider { height: 16px; background: repeating-linear-gradient(90deg, var(--accent) 0px, var(--accent) 8px, var(--accent2) 8px, var(--accent2) 16px, var(--grass) 16px, var(--grass) 24px, var(--dark-grass) 24px, var(--dark-grass) 32px); opacity: 0.5; }
+
+/* ── PREVIEW STRIP ── */
+.preview-strip { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 3rem; }
+.preview-strip canvas { image-rendering: pixelated; width: 72px; height: 72px; border: 2px solid rgba(255,255,255,0.08); transition: border-color 0.15s, transform 0.15s; cursor: pointer; }
+.preview-strip canvas:hover { border-color: var(--accent2); transform: scale(1.1) translateY(-4px); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 20000;
+  font-family: 'Press Start 2P', monospace; font-size: 9px; padding: 14px 18px;
+  border: 2px solid; max-width: 320px; line-height: 1.8;
+  transform: translateY(100px); opacity: 0; transition: all 0.3s;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: rgba(26,15,5,0.98); border-color: var(--success); color: var(--success); }
+.toast.error { background: rgba(26,15,5,0.98); border-color: var(--error); color: var(--error); }
+.toast.info { background: rgba(26,15,5,0.98); border-color: var(--accent2); color: var(--accent2); }
+
+@media (max-width: 700px) {
+  .lore-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .mint-box { padding: 2rem 1.5rem; }
+  .lightbox-inner { flex-direction: column; }
+  .lightbox canvas { width: 180px; height: 180px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">✕ Close</button>
+  <div class="lightbox-inner">
+    <div class="lightbox-canvas-wrap">
+      <canvas id="lightbox-canvas" width="512" height="512"></canvas>
+    </div>
+    <div class="lightbox-info">
+      <div class="lightbox-title" id="lb-title">Diglett Mug</div>
+      <div class="lightbox-rarity" id="lb-rarity">★ RARITY SCORE: —</div>
+      <div class="lightbox-traits" id="lb-traits"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-logo">Diglett <span>Mugs</span></div>
+  <ul class="nav-links">
+    <li><a href="#lore">Lore</a></li>
+    <li><a href="#traits">Traits</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#mint">Mint</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <button class="nav-wallet-btn" id="nav-wallet-btn" onclick="connectWallet()">⬡ Connect</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-sky"></div>
+  <div class="aurora">
+    <div class="aurora-band"></div>
+    <div class="aurora-band"></div>
+    <div class="aurora-band"></div>
+  </div>
+  <div class="stars" id="stars"></div>
+
+  <svg class="moon" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
+    <rect x="2" y="0" width="4" height="1" fill="#fffde0"/>
+    <rect x="1" y="1" width="6" height="1" fill="#fffde0"/>
+    <rect x="0" y="2" width="7" height="4" fill="#fffde0"/>
+    <rect x="1" y="6" width="6" height="1" fill="#fffde0"/>
+    <rect x="2" y="7" width="4" height="1" fill="#fffde0"/>
+    <rect x="2" y="2" width="2" height="2" fill="#e8e0a0"/>
+    <rect x="5" y="4" width="1" height="1" fill="#e8e0a0"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="logo-eyebrow">5,000 Unique Pixel Faces</div>
+    <h1 class="logo-title">Diglett<br/><span>Mugs</span></h1>
+    <p class="logo-sub">They dug up. They showed face. Now they're yours.</p>
+    <div class="hero-badges">
+      <span class="badge">5,000 Supply</span>
+      <span class="badge">10 Traits</span>
+      <span class="badge">512×512 px</span>
+    </div>
+  </div>
+
+  <div class="ground-section">
+    <div class="grass-layer"></div>
+    <div class="dirt-layer"></div>
+    <div class="dirt-texture"></div>
+  </div>
+
+  <div class="diglett-row" id="diglett-row"></div>
+
+  <div class="scroll-hint">
+    <span>Scroll Down</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</div>
+
+<div class="pixel-divider"></div>
+
+<!-- LORE -->
+<div style="background:linear-gradient(180deg,var(--surface2) 0%,var(--surface) 100%)">
+<section id="lore" class="lore-section">
+  <div class="section-label reveal">Origin Story</div>
+  <div class="lore-grid">
+    <div class="lore-text reveal reveal-delay-1">
+      <h2 class="section-title">From Deep<br/>Below</h2>
+      <p>Deep beneath the surface — past the roots, past the rocks, past the places light forgot — there exists a civilization that has <strong>never seen the sun</strong>.</p>
+      <p>The Diglett Mugs are the faces of that world. 5,000 souls who tunnelled up one strange night, poked their heads out of the dirt, looked around, and <strong>decided to stay visible</strong>.</p>
+      <p>Each one carries the marks of their underground life: hardened skin, wild hair, headgear forged in the deep mines, eyes that glow in shades the surface world has never named.</p>
+      <blockquote>"We dug for years looking for something precious.<br/>Turns out it was just us."</blockquote>
+      <p>Some wear crowns salvaged from forgotten kingdoms. Some wear the helmets of deep-earth workers. Some just woke up with good hair. <strong>All of them are rare. None of them are going back underground.</strong></p>
+    </div>
+    <div class="lore-art reveal reveal-delay-2">
+      <canvas id="lore-canvas-1" width="512" height="512" style="image-rendering:pixelated;width:160px;height:160px;border:3px solid var(--accent);box-shadow:6px 6px 0 var(--deeper-dirt);cursor:pointer" onclick="openLightboxById(555444)"></canvas>
+      <canvas id="lore-canvas-2" width="512" height="512" style="image-rendering:pixelated;width:120px;height:120px;border:2px solid var(--accent2);box-shadow:4px 4px 0 var(--deeper-dirt);cursor:pointer" onclick="openLightboxById(112358)"></canvas>
+      <canvas id="lore-canvas-3" width="512" height="512" style="image-rendering:pixelated;width:100px;height:100px;border:2px solid var(--grass);box-shadow:3px 3px 0 var(--deeper-dirt);cursor:pointer" onclick="openLightboxById(999888)"></canvas>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="pixel-divider"></div>
+
+<!-- TRAITS -->
+<div style="background:var(--surface2)">
+<section id="traits" class="traits-section">
+  <div class="section-label reveal">What Makes Them Unique</div>
+  <h2 class="section-title reveal reveal-delay-1">10 Traits.<br/>Endless Combinations.</h2>
+  <div class="traits-grid">
+    <div class="trait-card reveal"><span class="trait-icon">🌈</span><div class="trait-name">Background</div><div class="trait-desc">6 sky shades — from midnight blue to pale dawn. Sets the mood.</div><div class="trait-count">6 variants</div></div>
+    <div class="trait-card reveal reveal-delay-1"><span class="trait-icon">🤎</span><div class="trait-name">Skin Tone</div><div class="trait-desc">6 tones from light ivory to deep ebony. Every face is different.</div><div class="trait-count">6 variants</div></div>
+    <div class="trait-card reveal reveal-delay-2"><span class="trait-icon">💇</span><div class="trait-name">Hair Color</div><div class="trait-desc">Natural tones, wild dyes, and the occasional pure white shock.</div><div class="trait-count">10 variants</div></div>
+    <div class="trait-card reveal reveal-delay-3"><span class="trait-icon">👕</span><div class="trait-name">Top Color</div><div class="trait-desc">12 shirt colors — they dress well for creatures who live in dirt.</div><div class="trait-count">12 variants</div></div>
+    <div class="trait-card reveal"><span class="trait-icon">👑</span><div class="trait-name">Headwear</div><div class="trait-desc">Crowns, caps, hardhats, beanies, headphones. Or nothing at all.</div><div class="trait-count">15 variants</div></div>
+    <div class="trait-card reveal reveal-delay-1"><span class="trait-icon">🎤</span><div class="trait-name">Accessory</div><div class="trait-desc">The rare mic holder — ready to say something important.</div><div class="trait-count">2 variants</div></div>
+    <div class="trait-card reveal reveal-delay-2"><span class="trait-icon">👁️</span><div class="trait-name">Eye Style</div><div class="trait-desc">Dark, blue, red, or hazel. Some say the red ones see underground still.</div><div class="trait-count">4 variants</div></div>
+    <div class="trait-card reveal reveal-delay-3"><span class="trait-icon">😄</span><div class="trait-name">Smile</div><div class="trait-desc">Full grin, corner smirk, or the flat line of someone who's seen things.</div><div class="trait-count">3 variants</div></div>
+    <div class="trait-card reveal"><span class="trait-icon">🥸</span><div class="trait-name">Moustache</div><div class="trait-desc">Grew it down there. Won't shave it up here.</div><div class="trait-count">yes / no</div></div>
+    <div class="trait-card reveal reveal-delay-1"><span class="trait-icon">🧔</span><div class="trait-name">Beard</div><div class="trait-desc">Full dirt-miners' beard. Earned underground. Worn with pride.</div><div class="trait-count">yes / no</div></div>
+  </div>
+  <div class="preview-strip" id="preview-strip"></div>
+</section>
+</div>
+
+<div class="pixel-divider"></div>
+
+<!-- GALLERY -->
+<div style="background:var(--surface)">
+<section id="gallery" class="gallery-section">
+  <div class="section-label reveal">The Collection</div>
+  <h2 class="section-title reveal reveal-delay-1">Browse The<br/>Underground</h2>
+  <div class="gallery-controls reveal reveal-delay-2">
+    <button class="gallery-filter-btn active" onclick="filterGallery('all', this)">All</button>
+    <button class="gallery-filter-btn" onclick="filterGallery('crown', this)">👑 Crowns</button>
+    <button class="gallery-filter-btn" onclick="filterGallery('beard', this)">🧔 Bearded</button>
+    <button class="gallery-filter-btn" onclick="filterGallery('mic', this)">🎤 Mic</button>
+    <button class="gallery-filter-btn" onclick="filterGallery('red-eyes', this)">👁️ Red Eyes</button>
+    <input type="number" class="gallery-search" placeholder="Seed / Token #" id="gallery-search" oninput="searchGallery(this.value)" min="1" max="9999"/>
+  </div>
+  <div class="gallery-grid" id="gallery-grid"></div>
+
+</section>
+</div>
+
+<div class="pixel-divider"></div>
+
+<!-- MINT -->
+<div style="background:var(--surface2)">
+<section id="mint" class="mint-section">
+  <div class="section-label reveal" style="justify-content:center">Get Your Mug</div>
+  <h2 class="section-title reveal reveal-delay-1" style="margin-bottom:3rem">Mint A<br/>Diglett Mug</h2>
+  <div class="mint-box reveal reveal-delay-2">
+    <div class="mint-price" id="mint-price-display">0.0003 ETH</div>
+    <div class="mint-price-label">per Diglett Mug</div>
+
+    <div class="wallet-status" id="wallet-status">
+      <div class="status-dot"></div>
+      <span id="wallet-address-display">—</span>
+    </div>
+
+    <div style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--muted);letter-spacing:0.15em;margin-bottom:0.75rem;text-align:center">HOW MANY?</div>
+    <div class="mint-counter" id="mint-counter">
+      <button class="counter-btn" onclick="changeCount(-1)">−</button>
+      <div class="counter-val" id="mint-count">1</div>
+      <button class="counter-btn" onclick="changeCount(1)">+</button>
+    </div>
+    <div id="mint-total-line" style="font-family:'VT323',monospace;font-size:22px;color:var(--muted);margin-bottom:1.5rem;text-align:center">
+      Total: <span id="mint-total" style="color:var(--accent2);font-size:26px">0.0003 ETH</span>
+    </div>
+
+    <button class="wallet-btn connect" id="main-mint-btn" onclick="handleMintBtn()">
+      ⬡ Connect Wallet to Mint
+    </button>
+
+    <div class="tx-status" id="tx-status"></div>
+
+    <div class="mint-progress" style="margin-top:2rem">
+      <div class="mint-progress-bar" id="mint-progress-bar" style="width:0%"></div>
+    </div>
+    <div class="mint-progress-label">
+      <span id="minted-label">0 minted</span>
+      <span>5,000 total</span>
+    </div>
+
+    <div class="mint-stats">
+      <div class="mint-stat"><span class="mint-stat-val">5,000</span><span class="mint-stat-label">Total Supply</span></div>
+      <div class="mint-stat"><span class="mint-stat-val" id="minted-count">0</span><span class="mint-stat-label">Minted</span></div>
+      <div class="mint-stat"><span class="mint-stat-val">10</span><span class="mint-stat-label">Max/Txn</span></div>
+    </div>
+    <p class="wallet-note">Connect MetaMask, Coinbase Wallet, or any EIP-1193 provider.<br/>Each Mug is unique — randomly generated at mint time on-chain.</p>
+  </div>
+</section>
+</div>
+
+<div class="pixel-divider"></div>
+
+<!-- TEAM -->
+<div style="background:var(--surface)">
+<section id="team" class="team-section">
+  <div class="section-label reveal">The Crew</div>
+  <h2 class="section-title reveal reveal-delay-1">Who Dug This</h2>
+  <div class="team-grid" id="team-grid"></div>
+</section>
+</div>
+
+<div class="pixel-divider"></div>
+
+<!-- ROADMAP -->
+<div style="background:var(--surface2)">
+<section id="roadmap" class="roadmap-section">
+  <div class="section-label reveal">The Plan</div>
+  <h2 class="section-title reveal reveal-delay-1">Roadmap</h2>
+
+  <div class="roadmap-progress-bar-wrap reveal reveal-delay-2">
+    <div class="roadmap-progress-labels">
+      <span>2 / 5 Phases Complete</span>
+      <span>Phase 3 Active</span>
+    </div>
+    <div class="roadmap-track">
+      <div class="roadmap-track-fill"></div>
+    </div>
+  </div>
+
+  <div class="roadmap-grid">
+
+    <div class="roadmap-card done reveal">
+      <div class="roadmap-card-depth">— 100m</div>
+      <span class="roadmap-card-icon">⛏️</span>
+      <span class="roadmap-card-status status-done">✓ Complete</span>
+      <div class="roadmap-card-phase">Phase 1</div>
+      <div class="roadmap-card-title">The First Tunnel</div>
+      <div class="roadmap-card-desc">5,000 pixel faces hand-crafted from the underground up. Art engine finalized, all traits verified, smart contract audited and deployed. The Mugs exist. The dig is done.</div>
+    </div>
+
+    <div class="roadmap-card done reveal reveal-delay-1">
+      <div class="roadmap-card-depth">— 200m</div>
+      <span class="roadmap-card-icon">🌱</span>
+      <span class="roadmap-card-status status-done">✓ Complete</span>
+      <div class="roadmap-card-phase">Phase 2</div>
+      <div class="roadmap-card-title">Surface Break</div>
+      <div class="roadmap-card-desc">Public mint live. All 5,000 Diglett Mugs released to holders. First 500 minters received an exclusive golden trait. The underground went public and didn't look back.</div>
+    </div>
+
+    <div class="roadmap-card active reveal reveal-delay-2">
+      <div class="roadmap-card-depth">— 300m</div>
+      <span class="roadmap-card-icon">🎭</span>
+      <span class="roadmap-card-status status-active">● In Progress · 2026</span>
+      <div class="roadmap-card-phase">Phase 3</div>
+      <div class="roadmap-card-title">Faces Above Ground</div>
+      <div class="roadmap-card-desc">Holder trait upgrades unlocked. Animated Mug previews rolling out — every face gets its own movement. Lore drops every month on Twitter. Community treasury vote launches Q2 2026.</div>
+    </div>
+
+    <div class="roadmap-card upcoming reveal reveal-delay-3">
+      <div class="roadmap-card-depth">— 400m</div>
+      <span class="roadmap-card-icon">🏗️</span>
+      <span class="roadmap-card-status status-upcoming">Q3 2026</span>
+      <div class="roadmap-card-phase">Phase 4</div>
+      <div class="roadmap-card-title">The Second Layer</div>
+      <div class="roadmap-card-desc">A second collection surfaces — something that was always deeper down. Physical merch for all holders. Full animated series drops. New lore chapters. Something is moving beneath the dirt again.</div>
+    </div>
+
+    <div class="roadmap-card upcoming reveal reveal-delay-4">
+      <div class="roadmap-card-depth">— 500m</div>
+      <span class="roadmap-card-icon">🌍</span>
+      <span class="roadmap-card-status status-upcoming">Late 2026</span>
+      <div class="roadmap-card-phase">Phase 5</div>
+      <div class="roadmap-card-title">The Underground Lives</div>
+      <div class="roadmap-card-desc">Holder-exclusive interactive lore game. Token-gated collector events. Collaborative art with other pixel-native collections. The Diglett Mugs universe keeps expanding — they never were going back underground.</div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<div class="pixel-divider"></div>
+
+<!-- FAQ -->
+<div style="background:var(--surface)">
+<section id="faq" class="faq-section">
+  <div class="section-label reveal">Questions From The Surface</div>
+  <h2 class="section-title reveal reveal-delay-1">FAQ</h2>
+  <div class="faq-list">
+    <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">What blockchain are Diglett Mugs on?</div><div class="faq-a">Diglett Mugs are minted on Ethereum. All metadata and images are stored permanently on IPFS — decentralized and not dependent on any server we run.</div></div>
+    <div class="faq-item reveal reveal-delay-1"><div class="faq-q" onclick="toggleFaq(this)">How many can I mint per wallet?</div><div class="faq-a">Up to 10 Diglett Mugs per wallet. This keeps the collection fair and prevents any single holder from grabbing too many at once.</div></div>
+    <div class="faq-item reveal reveal-delay-2"><div class="faq-q" onclick="toggleFaq(this)">What size are the images?</div><div class="faq-a">Each Diglett Mug is a 512×512px pixel art PNG — OpenSea's recommended resolution. Sharp, crisp, and perfect for display. Every pixel is intentional.</div></div>
+    <div class="faq-item reveal reveal-delay-1"><div class="faq-q" onclick="toggleFaq(this)">Are the traits revealed at mint?</div><div class="faq-a">Yes. Diglett Mugs are fully revealed at the moment of mint — no blind boxes, no waiting. You see exactly what you're getting before you confirm the transaction.</div></div>
+    <div class="faq-item reveal reveal-delay-2"><div class="faq-q" onclick="toggleFaq(this)">Do I own the commercial rights?</div><div class="faq-a">Holders receive full commercial rights to their individual Diglett Mug. Use it as a PFP, put it on a t-shirt, build a brand around it — your Mug, your rules.</div></div>
+    <div class="faq-item reveal reveal-delay-3"><div class="faq-q" onclick="toggleFaq(this)">What makes a Mug rare?</div><div class="faq-a">Rarity is determined by trait combination. Crown headwear, red eyes, mic accessory, and the beard+moustache combo are among the rarest. Full rarity rankings published on Rarity.tools at launch.</div></div>
+  </div>
+</section>
+</div>
+
+<div class="pixel-divider"></div>
+
+<footer>
+  <div class="footer-logo">Diglett <span>Mugs</span></div>
+  <div class="footer-links">
+    <a href="#">OpenSea</a><a href="#">Twitter</a>
+  </div>
+  <div class="footer-copy">© 2026 Diglett Mugs. 5,000 faces. Zero going back underground.</div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════
+// AVATAR ENGINE
+// ═══════════════════════════════════════════════
+const GRID=11,CELL=46,PAD=3,SIZE=512;
+const SKIN=['#f5c89a','#e8a87c','#c8824d','#a0623a','#7a4028','#4a2510'];
+const HAIR=['#1a0a00','#3d2b1f','#8b5a2b','#c8a96e','#e8d5a0','#d4424e','#7b2d8b','#2d7b4f','#1a3a6b','#ffffff'];
+const BG_C=['#7ba7e0','#8ab4f0','#6b9fd4','#a0c0e8','#b0d0f0','#90bce0'];
+const HW_KEYS=[null,'headphones_black','headphones_blue','headphones_red','cap_yellow','cap_purple','cap_white','cap_green','hardhat_white','hardhat_yellow','hardhat_blue','beanie_pink','crown','sunglasses_blue','sunglasses_red'];
+const TOPS=['#2a5a2a','#1a4a8a','#8a2a2a','#4a2a8a','#8a6a1a','#2a7a6a','#6a2a6a','#1a1a1a','#5a3a1a','#3a5a7a','#c8a000','#e05a00'];
+const ACCS=[null,null,null,'mic'];
+const TRAIT_NAMES={background:'Background',skin:'Skin Tone',hair:'Hair',top:'Top',headwear:'Headwear',accessory:'Accessory',eyeStyle:'Eyes',smileType:'Smile',hasMoustache:'Moustache',hasBeard:'Beard'};
+const RARITY_WEIGHTS={crown:5,mic:8,redEyes:10,beard:15,moustache:20};
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+function lighten(hex,amt){let n=parseInt(hex.slice(1),16);let r=Math.min(255,Math.max(0,((n>>16)&0xff)+amt));let g=Math.min(255,Math.max(0,((n>>8)&0xff)+amt));let b=Math.min(255,Math.max(0,(n&0xff)+amt));return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');}
+
+function buildTraits(seed){
+  const r=mulberry32(seed);
+  const pick=(a)=>a[Math.floor(r()*a.length)];
+  return {background:pick(BG_C),skin:pick(SKIN),hair:pick(HAIR),top:pick(TOPS),headwear:pick(HW_KEYS),accessory:pick(ACCS),eyeStyle:Math.floor(r()*4),smileType:Math.floor(r()*3),hasMoustache:r()>0.75,hasBeard:r()>0.8};
+}
+
+function calcRarity(t){
+  let score=100;
+  if(t.headwear==='crown') score-=RARITY_WEIGHTS.crown;
+  if(t.accessory==='mic') score-=RARITY_WEIGHTS.mic;
+  if(t.eyeStyle===2) score-=RARITY_WEIGHTS.redEyes;
+  if(t.hasBeard) score-=RARITY_WEIGHTS.beard;
+  if(t.hasMoustache) score-=RARITY_WEIGHTS.moustache;
+  return Math.max(score,1);
+}
+
+function rarityLabel(score){
+  if(score<=40) return '★★★ LEGENDARY';
+  if(score<=60) return '★★ RARE';
+  if(score<=75) return '★ UNCOMMON';
+  return 'COMMON';
+}
+
+function drawAvatar(canvas,seed){
+  const ctx=canvas.getContext('2d');
+  canvas.width=SIZE;canvas.height=SIZE;
+  const C=CELL,P=PAD;
+  const t=buildTraits(seed);
+  const r=mulberry32(seed+1);
+  function px(x,y,c){ctx.fillStyle=c;ctx.fillRect(P+x*C,P+y*C,C,C);}
+  function row(y,x1,x2,c){for(let x=x1;x<=x2;x++)px(x,y,c);}
+  ctx.fillStyle=t.background;ctx.fillRect(0,0,SIZE,SIZE);
+  row(7,2,8,t.top);row(8,2,8,t.top);row(9,2,8,t.top);row(10,1,9,t.top);
+  const lighter=lighten(t.top,40);px(4,7,lighter);px(5,7,lighter);px(6,7,lighter);
+  row(6,4,6,t.skin);
+  row(2,3,7,t.skin);row(3,2,8,t.skin);row(4,2,8,t.skin);row(5,2,8,t.skin);row(6,2,8,t.skin);
+  const hw=t.headwear;
+  if(!hw||hw==='mic'||hw==='sunglasses_blue'||hw==='sunglasses_red'){
+    row(1,2,8,t.hair);px(2,2,t.hair);px(8,2,t.hair);
+    if(r()>0.5){row(0,3,7,t.hair);px(2,1,t.hair);px(8,1,t.hair);}
+  }
+  const eyeW=t.eyeStyle===1?'#3399ff':(t.eyeStyle===2?'#ff3344':'#1a1a2e');
+  px(3,4,'#fff');px(7,4,'#fff');px(3,4,eyeW);px(7,4,eyeW);
+  ctx.fillStyle='rgba(255,255,255,0.8)';
+  ctx.fillRect(P+3*C+Math.round(C*.45),P+4*C+Math.round(C*.15),Math.round(C*.28),Math.round(C*.28));
+  ctx.fillRect(P+7*C+Math.round(C*.45),P+4*C+Math.round(C*.15),Math.round(C*.28),Math.round(C*.28));
+  ctx.fillStyle='rgba(0,0,0,0.12)';ctx.fillRect(P+5*C+Math.round(C*.1),P+5*C,Math.round(C*.8),C);
+  if(t.smileType===0){px(4,6,'#cc6644');px(5,6,'#cc6644');px(6,6,'#cc6644');}
+  else if(t.smileType===1){px(4,6,'rgba(0,0,0,0.28)');px(6,6,'rgba(0,0,0,0.28)');}
+  else{ctx.fillStyle='rgba(0,0,0,0.18)';ctx.fillRect(P+4*C,P+5*C+Math.round(C*.6),3*C,Math.round(C*.3));}
+  if(t.hasMoustache){px(4,5,'#333');px(5,5,'#333');px(6,5,'#333');}
+  if(t.hasBeard){ctx.fillStyle='rgba(0,0,0,0.22)';ctx.fillRect(P+3*C,P+6*C,5*C,C);ctx.fillRect(P+3*C,P+7*C,5*C,C);}
+  drawHW(ctx,hw,t.hair,t.skin,px,row,C,P);
+  if(t.accessory==='mic'){
+    ctx.fillStyle='#888';ctx.fillRect(P+2*C,P+4*C,Math.round(C*.25),C*2);ctx.fillRect(P+2*C,P+4*C,C,Math.round(C*.3));
+    ctx.fillStyle='#ccc';ctx.beginPath();ctx.arc(P+2*C+Math.round(C*.4),P+4*C,Math.round(C*.4),0,Math.PI*2);ctx.fill();
+  }
+}
+
+function drawHW(ctx,hw,hair,skin,px,row,C,P){
+  if(!hw)return;
+  function r2(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(P+x*C,P+y*C,w*C,h*C);}
+  if(hw==='headphones_black'||hw==='headphones_blue'||hw==='headphones_red'){
+    const c=hw==='headphones_black'?'#111':(hw==='headphones_blue'?'#1155cc':'#cc2211');
+    r2(1,3,1,3,c);r2(9,3,1,3,c);ctx.fillStyle=c;ctx.fillRect(P+C,P+2*C,9*C,Math.round(C*.45));r2(1,3,1,3,'#222');r2(9,3,1,3,'#222');
+  }else if(hw==='sunglasses_blue'||hw==='sunglasses_red'){
+    const c=hw==='sunglasses_blue'?'#2266ff':'#ee2222';
+    ctx.fillStyle=c;ctx.globalAlpha=0.85;ctx.fillRect(P+2*C,P+4*C,2*C,C);ctx.fillRect(P+6*C,P+4*C,2*C,C);ctx.globalAlpha=1;
+    ctx.fillStyle='#111';ctx.fillRect(P+4*C,P+4*C,Math.round(C*.45),Math.round(C*.45));ctx.fillRect(P+5*C+Math.round(C*.55),P+4*C,Math.round(C*.45),Math.round(C*.45));ctx.fillRect(P+C,P+4*C+Math.round(C*.25),C,Math.round(C*.2));ctx.fillRect(P+8*C,P+4*C+Math.round(C*.25),C,Math.round(C*.2));
+  }else if(hw==='hardhat_white'||hw==='hardhat_yellow'||hw==='hardhat_blue'){
+    const c=hw==='hardhat_white'?'#e8e8e8':(hw==='hardhat_yellow'?'#f5c800':'#2255bb');
+    r2(3,1,5,1,c);r2(2,0,7,1,c);r2(1,1,9,1,c);ctx.fillStyle=lighten(c,-18);ctx.fillRect(P+C,P+C+Math.round(C*.18),9*C,Math.round(C*.22));
+  }else if(hw==='cap_yellow'||hw==='cap_purple'||hw==='cap_white'||hw==='cap_green'){
+    const c=hw==='cap_yellow'?'#f5c800':(hw==='cap_purple'?'#882299':(hw==='cap_white'?'#eeeeee':'#117722'));
+    r2(2,0,7,2,c);r2(1,1,9,1,c);ctx.fillStyle=lighten(c,-22);ctx.fillRect(P+C,P+2*C,9*C,Math.round(C*.22));r2(1,2,1,1,c);r2(9,2,1,1,c);
+  }else if(hw==='beanie_pink'){
+    r2(2,0,7,3,'#e055aa');r2(2,0,7,1,'#fff');r2(2,2,7,1,'#fff');r2(2,3,7,1,'#e055aa');
+    ctx.fillStyle='#ff88cc';ctx.beginPath();ctx.arc(P+5.5*C,P,Math.round(C*.5),0,Math.PI*2);ctx.fill();
+  }else if(hw==='crown'){
+    ctx.fillStyle='#f5c800';
+    const pts=[[2,2],[3,1],[4,0],[5,1],[6,0],[7,1],[8,2],[8,3],[2,3]];
+    ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(P+p[0]*C,P+p[1]*C):ctx.moveTo(P+p[0]*C,P+p[1]*C));ctx.closePath();ctx.fill();
+    ctx.fillStyle='#e53935';ctx.beginPath();ctx.arc(P+4*C,P+C+Math.round(C*.18),Math.round(C*.28),0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1565c0';ctx.beginPath();ctx.arc(P+6*C,P+C+Math.round(C*.18),Math.round(C*.28),0,Math.PI*2);ctx.fill();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// STARS & FIREFLIES
+// ═══════════════════════════════════════════════
+const starsEl=document.getElementById('stars');
+for(let i=0;i<80;i++){
+  const s=document.createElement('div');s.className='star';
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*4}s;opacity:${0.3+Math.random()*0.7}`;
+  if(Math.random()>0.7){s.style.width=s.style.height='3px';}
+  starsEl.appendChild(s);
+}
+const hero=document.querySelector('.hero');
+for(let i=0;i<12;i++){
+  const f=document.createElement('div');f.className='firefly';
+  const xl=20+Math.random()*60,yt=45+Math.random()*30;
+  f.style.cssText=`left:${xl}%;top:${yt}%;--fdur:${5+Math.random()*6}s;--fdelay:${Math.random()*6}s;--fx:${(Math.random()-0.5)*80}px;--fy:-${40+Math.random()*60}px;--fx2:${(Math.random()-0.5)*60}px;--fy2:-${80+Math.random()*80}px`;
+  hero.appendChild(f);
+}
+
+// ═══════════════════════════════════════════════
+// PEEKING DIGLETTS
+// ═══════════════════════════════════════════════
+const digRow=document.getElementById('diglett-row');
+const peekSeeds=[112233,445566,778899,321654,987012,543210,246810,135790];
+peekSeeds.forEach((seed,i)=>{
+  const sizes=[48,56,44,64,40,52,48,44];
+  const nws=[18,22,16,26,15,20,18,16];
+  const nhs=[22,28,20,32,18,24,22,20];
+  const wrap=document.createElement('div');wrap.className='diglett-peek';
+  wrap.style.cssText=`--pdur:${3+i*0.4}s;--pdelay:${i*0.3}s`;
+  wrap.onclick=()=>openLightboxById(seed);
+  const c=document.createElement('canvas');c.width=SIZE;c.height=SIZE;c.className='diglett-face';
+  c.style.cssText=`--fsize:${sizes[i]}px;width:${sizes[i]}px;height:${sizes[i]}px`;
+  drawAvatar(c,seed);
+  const t=buildTraits(seed);
+  const neck=document.createElement('div');neck.className='diglett-neck';
+  neck.style.cssText=`width:${nws[i]}px;height:${nhs[i]}px;background:${t.skin}`;
+  wrap.appendChild(c);wrap.appendChild(neck);
+  digRow.appendChild(wrap);
+});
+
+// Lore canvases
+drawAvatar(document.getElementById('lore-canvas-1'),555444);
+drawAvatar(document.getElementById('lore-canvas-2'),112358);
+drawAvatar(document.getElementById('lore-canvas-3'),999888);
+
+// ═══════════════════════════════════════════════
+// PREVIEW STRIP
+// ═══════════════════════════════════════════════
+const strip=document.getElementById('preview-strip');
+[101,202,303,404,505,606,707,808,909,1010,1111,1212,1313,1414,1515].forEach(seed=>{
+  const c=document.createElement('canvas');c.width=SIZE;c.height=SIZE;
+  c.style.width='72px';c.style.height='72px';
+  drawAvatar(c,seed);
+  c.onclick=()=>openLightboxById(seed);
+  strip.appendChild(c);
+});
+
+// ═══════════════════════════════════════════════
+// GALLERY
+// ═══════════════════════════════════════════════
+let gallerySeeds=[];
+let galleryFilter='all';
+
+function generateGallerySeeds(){
+  gallerySeeds=[];
+  for(let i=1;i<=40;i++) gallerySeeds.push(i*137+31);
+}
+generateGallerySeeds();
+
+function matchesFilter(seed,filter){
+  const t=buildTraits(seed);
+  if(filter==='all') return true;
+  if(filter==='crown') return t.headwear==='crown';
+  if(filter==='beard') return t.hasBeard;
+  if(filter==='mic') return t.accessory==='mic';
+  if(filter==='red-eyes') return t.eyeStyle===2;
+  return true;
+}
+
+function renderGallery(){
+  const grid=document.getElementById('gallery-grid');
+  grid.innerHTML='';
+  const filtered=gallerySeeds.filter(s=>matchesFilter(s,galleryFilter));
+  filtered.forEach(seed=>{
+    const item=document.createElement('div');item.className='gallery-item';
+    const c=document.createElement('canvas');c.width=SIZE;c.height=SIZE;
+    drawAvatar(c,seed);
+    const t=buildTraits(seed);
+    const rs=calcRarity(t);
+    const rb=document.createElement('div');rb.className='rarity-badge';
+    if(rs<=60){rb.textContent=rarityLabel(rs);rb.style.background=rs<=40?'#7c3aed':'#1565c0';}
+    item.appendChild(c);
+    if(rs<=60) item.appendChild(rb);
+    item.onclick=()=>openLightboxById(seed);
+    grid.appendChild(item);
+  });
+}
+
+function filterGallery(f,btn){
+  galleryFilter=f;
+  document.querySelectorAll('.gallery-filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGallery();
+}
+
+function loadMoreGallery(){}
+
+function searchGallery(val){
+  const v=parseInt(val);
+  if(val===''){ galleryFilter=document.querySelector('.gallery-filter-btn.active')?.dataset?.filter||'all'; renderGallery(); return; }
+  if(!isNaN(v)&&v>0){
+    const grid=document.getElementById('gallery-grid');grid.innerHTML='';
+    const seed=v*137+31;
+    const item=document.createElement('div');item.className='gallery-item';
+    const c=document.createElement('canvas');c.width=SIZE;c.height=SIZE;
+    drawAvatar(c,seed);
+    item.appendChild(c);
+    item.onclick=()=>openLightboxById(seed);
+    grid.appendChild(item);
+  }
+}
+renderGallery();
+
+// ═══════════════════════════════════════════════
+// LIGHTBOX
+// ═══════════════════════════════════════════════
+function openLightboxById(seed){
+  const lb=document.getElementById('lightbox');
+  const lbc=document.getElementById('lightbox-canvas');
+  drawAvatar(lbc,seed);
+  const t=buildTraits(seed);
+  const rs=calcRarity(t);
+  document.getElementById('lb-title').textContent=`Diglett Mug`;
+  document.getElementById('lb-rarity').textContent=`${rarityLabel(rs)} — Score: ${rs}`;
+  const traitEl=document.getElementById('lb-traits');
+  traitEl.innerHTML='';
+  const displayTraits=[
+    ['Headwear',t.headwear||'None'],
+    ['Accessory',t.accessory||'None'],
+    ['Eyes',['Dark','Blue','Red','Hazel'][t.eyeStyle]],
+    ['Smile',['Grin','Smirk','Flat'][t.smileType]],
+    ['Beard',t.hasBeard?'Yes':'No'],
+    ['Moustache',t.hasMoustache?'Yes':'No'],
+  ];
+  displayTraits.forEach(([k,v])=>{
+    const row=document.createElement('div');row.className='lightbox-trait';
+    row.innerHTML=`<span class="lightbox-trait-name">${k}</span><span class="lightbox-trait-val">${v}</span>`;
+    traitEl.appendChild(row);
+  });
+  lb.classList.add('open');
+}
+function closeLightbox(e){ if(e.target===document.getElementById('lightbox')) document.getElementById('lightbox').classList.remove('open'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.getElementById('lightbox').classList.remove('open'); });
+
+// ═══════════════════════════════════════════════
+// TEAM
+// ═══════════════════════════════════════════════
+const TEAM=[
+  {seed:77777,name:'DirtMaster',role:'Founder & Artist',bio:'Spent 4 years as a pixel artist before going full crypto. Lives by the axiom: if it fits in 512px, it fits in the heart.',links:[]},
+  {seed:88888,name:'TunnelDev',role:'Smart Contract Lead',bio:'Solidity wizard who once found a bug in someone else\'s contract just by looking at the ABI. Probably still underground.',links:[]},
+  {seed:55321,name:'SurfaceOps',role:'Community & Marketing',bio:'Turned a hobby community into a 40k-strong following. Knows everyone in Web3. Has probably DMd you before.',links:[]},
+  {seed:13579,name:'DeepLore',role:'Worldbuilding & Copy',bio:'Former fiction writer who got bit by the NFT bug. Responsible for why you\'re reading this right now.',links:[]},
+];
+const teamGrid=document.getElementById('team-grid');
+TEAM.forEach(m=>{
+  const card=document.createElement('div');card.className='team-card reveal';
+  const c=document.createElement('canvas');c.width=SIZE;c.height=SIZE;c.className='team-avatar';
+  drawAvatar(c,m.seed);
+  const links=m.links.map(l=>`<a href="${l.href}" class="team-link">${l.label}</a>`).join('');
+  card.innerHTML=`<div class="team-name">${m.name}</div><div class="team-role">${m.role}</div><div class="team-bio">${m.bio}</div><div class="team-links">${links}</div>`;
+  card.insertBefore(c,card.firstChild);
+  teamGrid.appendChild(card);
+});
+
+// ═══════════════════════════════════════════════
+// WEB3 / WALLET
+// ═══════════════════════════════════════════════
+let walletAddress=null;
+let mintCount=1;
+
+async function connectWallet(){
+  if(walletAddress){ showToast('Already connected: '+shortAddr(walletAddress),'info'); return; }
+  if(typeof window.ethereum==='undefined'){
+    showToast('No wallet detected.\nInstall MetaMask or another EIP-1193 wallet.','error');
+    return;
+  }
+  try{
+    const accounts=await window.ethereum.request({method:'eth_requestAccounts'});
+    walletAddress=accounts[0];
+    onWalletConnected();
+  }catch(e){
+    showToast('Connection rejected.','error');
+  }
+}
+
+function onWalletConnected(){
+  const short=shortAddr(walletAddress);
+  // nav button
+  const nb=document.getElementById('nav-wallet-btn');
+  nb.textContent='⬡ '+short;nb.classList.add('connected');nb.onclick=()=>showToast('Connected: '+walletAddress,'info');
+  // mint section
+  const ws=document.getElementById('wallet-status');ws.classList.add('connected');
+  document.getElementById('wallet-address-display').textContent=short+' — Connected';
+  const btn=document.getElementById('main-mint-btn');
+  btn.textContent='⛏ Mint Now';btn.className='wallet-btn mint-action';
+  btn.onclick=handleMintBtn;
+  showToast('Wallet connected!\n'+short,'success');
+}
+
+async function handleMintBtn(){
+  if(!walletAddress){ connectWallet(); return; }
+  await executeMint();
+}
+
+async function executeMint(){
+  if(typeof window.ethereum==='undefined'){ showToast('No wallet found.','error'); return; }
+  const btn=document.getElementById('main-mint-btn');
+  btn.disabled=true;btn.textContent='⏳ Minting...';
+  const txEl=document.getElementById('tx-status');
+  txEl.className='tx-status pending';txEl.style.display='block';
+  txEl.textContent='⏳ Transaction pending...\nWaiting for confirmation.';
+  try{
+    const CONTRACT='0x0000000000000000000000000000000000000000'; // replace with your contract
+    const priceWei=ethers.utils.parseEther((mintCount*0.0003).toFixed(4));
+    const priceHex=priceWei.toHexString();
+    const mintData='0x1249c58b'; // mint() selector — replace with your ABI-encoded call
+    const tx=await window.ethereum.request({
+      method:'eth_sendTransaction',
+      params:[{from:walletAddress,to:CONTRACT,value:priceHex,data:mintData}]
+    });
+    txEl.className='tx-status success';
+    txEl.innerHTML=`✓ Transaction sent!<br/>Hash: <span style="word-break:break-all;font-size:9px">${tx}</span>`;
+    showToast('Mint TX submitted!','success');
+    minted+=mintCount;
+    updateMintedUI(minted);
+    // refresh live count after mint
+    setTimeout(fetchLiveMintCount,3000);
+  }catch(e){
+    txEl.className='tx-status fail';
+    txEl.textContent='✕ '+(e.message||'Transaction failed or rejected.');
+    showToast('Transaction failed.','error');
+  }finally{
+    btn.disabled=false;btn.textContent='⛏ Mint Now';
+  }
+}
+
+function shortAddr(addr){ return addr.slice(0,6)+'...'+addr.slice(-4); }
+
+if(typeof window.ethereum!=='undefined'){
+  window.ethereum.on('accountsChanged',accs=>{
+    if(accs.length){walletAddress=accs[0];onWalletConnected();}
+    else{walletAddress=null;}
+  });
+}
+
+// ═══════════════════════════════════════════════
+// MINT COUNTER & PROGRESS
+// ═══════════════════════════════════════════════
+function changeCount(d){
+  mintCount=Math.max(1,Math.min(10,mintCount+d));
+  document.getElementById('mint-count').textContent=mintCount;
+  const totalEl=document.getElementById('mint-total');
+  totalEl.textContent=(mintCount*0.0003).toFixed(4)+' ETH';
+  // pulse animation on change
+  totalEl.style.transition='none';
+  totalEl.style.transform='scale(1.25)';
+  totalEl.style.color='#fff';
+  setTimeout(()=>{totalEl.style.transition='transform 0.25s ease,color 0.25s ease';totalEl.style.transform='scale(1)';totalEl.style.color='var(--accent2)';},30);
+}
+
+let minted=0;
+function updateMintedUI(n){
+  n=Math.min(n,5000);
+  document.getElementById('minted-count').textContent=n.toLocaleString();
+  document.getElementById('minted-label').textContent=n.toLocaleString()+' minted';
+  document.getElementById('mint-progress-bar').style.width=(n/5000*100)+'%';
+}
+// ═══════════════════════════════════════════════
+// LIVE MINT COUNT (ethers.js)
+// ═══════════════════════════════════════════════
+const CONTRACT_ADDRESS='0x0000000000000000000000000000000000000000'; // replace with deployed contract
+const TOTAL_SUPPLY_ABI=['function totalSupply() view returns (uint256)'];
+const RPC_URL='https://eth.llamarpc.com'; // public Ethereum RPC
+
+async function fetchLiveMintCount(){
+  try{
+    const provider=new ethers.providers.JsonRpcProvider(RPC_URL);
+    const contract=new ethers.Contract(CONTRACT_ADDRESS,TOTAL_SUPPLY_ABI,provider);
+    const total=await contract.totalSupply();
+    minted=total.toNumber();
+    updateMintedUI(minted);
+  }catch(e){
+    // contract not deployed yet — keep current count
+  }
+}
+
+// Poll every 15 seconds for live updates
+fetchLiveMintCount();
+setInterval(fetchLiveMintCount,15000);
+
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+let toastTimer;
+function showToast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' show';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ═══════════════════════════════════════════════
+// FAQ
+// ═══════════════════════════════════════════════
+function toggleFaq(el){
+  const item=el.parentElement;const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+// ═══════════════════════════════════════════════
+// SCROLL ANIMATIONS
+// ═══════════════════════════════════════════════
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// NAV scroll state & active link
+window.addEventListener('scroll',()=>{
+  document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>40);
+  const sections=['lore','traits','gallery','mint','team','roadmap','faq'];
+  let current='';
+  sections.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(window.scrollY>=el.offsetTop-120) current=id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+current);
+  });
+},{passive:true});
+</script>
+</body>
+</html>
